@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data & outputs (large files — track with DVC or Kaggle Datasets)
+data/mathkg/cache/
+data/checkpoints/*.pt
+data/checkpoints/*.pth
+data/results/
+*.png
+*.npy
+
+# Keep split TSVs and stats in version control
+!data/mathkg/splits/.gitkeep
+!data/mathkg/stats.json
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
