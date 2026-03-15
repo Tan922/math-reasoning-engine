@@ -11,10 +11,10 @@ hardware:
 
 # ─── Knowledge Graph ──────────────────────────────────────────────────────────
 knowledge_graph:
-  max_entities: 3000          # increase to 10000+ for production
+  max_entities: 30000          # increase to 10000+ for production
   embed_dim: 64
   hidden_dim: 128
-  noise_std: 0.05
+  noise_std: 0.01
   data_dir: data/mathkg
   # Kaggle: try XML dump → API → synthetic, in that order
   proofwiki_dump_url: "https://proofwiki.org/xmldump/latest.xml.gz"
@@ -31,10 +31,10 @@ nro:
     - generalizes
     - equivalent_to
     - applied_in
-  train_epochs: 60
-  learning_rate: 3.0e-4
-  weight_decay: 1.0e-4
-  batch_size: 128
+  train_epochs: 100
+  learning_rate: 1.0e-3
+  weight_decay: 1.0e-5
+  batch_size: 64
   compose_init_steps: 500
   compose_init_lr: 1.0e-3
   finetune_epochs: 40

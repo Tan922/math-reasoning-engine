@@ -1,8 +1,18 @@
 """
 mre.utils.config
 ────────────────
-Load and access YAML configuration.  Supports dot-notation access and
-automatic device resolution (auto → cuda / cpu).
+Load and access YAML configuration.  Supports dot-notation access,
+automatic device resolution, and automatic path resolution.
+
+Path resolution
+───────────────
+Any config value whose key ends with ``_dir`` and whose value is a relative
+path is resolved to an absolute path at load time, anchored at the project
+root.  The project root is the nearest ancestor directory that contains a
+``configs/`` subdirectory.
+
+This means notebooks and scripts always get the same absolute path regardless
+of their working directory (``notebooks/``, ``/kaggle/working``, repo root, …).
 """
 
 from __future__ import annotations
@@ -14,8 +24,41 @@ from typing import Any
 import yaml
 
 
+# ── Project-root detection ────────────────────────────────────────────────────
+
+def _find_project_root(start: Path) -> Path:
+    """
+    Walk upward from *start* until a directory containing ``configs/`` is found.
+    Falls back to *start* if nothing is found.
+    """
+    for candidate in [start, *start.parents]:
+        if (candidate / "configs").is_dir():
+            return candidate
+    return start
+
+
+def _resolve_dirs(data: dict, project_root: Path) -> dict:
+    """
+    Recursively walk *data* and resolve every value whose key ends with
+    ``_dir`` from a relative path to an absolute path under *project_root*.
+    Absolute paths and non-string values are left untouched.
+    """
+    resolved = {}
+    for key, value in data.items():
+        if isinstance(value, dict):
+            resolved[key] = _resolve_dirs(value, project_root)
+        elif key.endswith("_dir") and isinstance(value, str):
+            p = Path(value)
+            resolved[key] = str(project_root / p) if not p.is_absolute() else value
+        else:
+            resolved[key] = value
+    return resolved
+
+
+# ── Config wrapper ────────────────────────────────────────────────────────────
+
 class Config:
-    """Thin wrapper around a nested dict that supports attribute access."""
+    """Thin wrapper around a nested dict that supports dot-notation access."""
 
     def __init__(self, data: dict):
         self._data = data
@@ -32,21 +75,29 @@ class Config:
         return self._data
 
 
+# ── Public API ────────────────────────────────────────────────────────────────
+
 def load_config(path: str | Path | None = None) -> Config:
     """
-    Load configuration from *path*.
+    Load configuration from *path*, resolve all ``*_dir`` values to absolute
+    paths, and return a :class:`Config` object.
 
-    Search order when *path* is None:
+    Search order when *path* is ``None``:
       1. ``MRE_CONFIG`` environment variable
-      2. ``configs/kaggle_config.yaml`` relative to the project root
+      2. ``configs/kaggle_config.yaml`` located by walking up from this file
       3. Built-in defaults
+
+    After loading, every relative ``*_dir`` value is resolved relative to the
+    project root (the directory that contains ``configs/``), so callers never
+    need to think about the current working directory.
     """
+    config_path: Path | None = None
+
     if path is None:
         env_path = os.environ.get("MRE_CONFIG")
         if env_path:
             path = Path(env_path)
         else:
-            # Walk up from this file to find the project root
             here = Path(__file__).resolve()
             for parent in here.parents:
                 candidate = parent / "configs" / "kaggle_config.yaml"
@@ -55,23 +106,38 @@ def load_config(path: str | Path | None = None) -> Config:
                     break
 
     if path is not None and Path(path).exists():
-        with open(path, "r", encoding="utf-8") as fh:
+        config_path = Path(path).resolve()
+        with open(config_path, "r", encoding="utf-8") as fh:
             data = yaml.safe_load(fh)
     else:
         data = _defaults()
 
+    # Determine project root:
+    #   • if we loaded a file, root = directory two levels up from configs/file
+    #     (i.e. the directory that *contains* configs/)
+    #   • otherwise search upward from CWD
+    if config_path is not None:
+        project_root = config_path.parent.parent   # .../configs/kaggle_config.yaml → ...
+    else:
+        project_root = _find_project_root(Path.cwd())
+
+    data = _resolve_dirs(data, project_root)
     return Config(data)
 
 
 def resolve_device(cfg: Config) -> str:
-    """Return the concrete device string ('cuda' or 'cpu')."""
-    import torch
+    """Return the concrete device string (``'cuda'`` or ``'cpu'``)."""
+    try:
+        import torch
+        requested = getattr(cfg.hardware, "device", "auto")
+        if requested == "auto":
+            return "cuda" if torch.cuda.is_available() else "cpu"
+        return requested
+    except ImportError:
+        return "cpu"
 
-    requested = getattr(cfg.hardware, "device", "auto")
-    if requested == "auto":
-        return "cuda" if torch.cuda.is_available() else "cpu"
-    return requested
 
+# ── Built-in defaults ─────────────────────────────────────────────────────────
 
 def _defaults() -> dict:
     return {

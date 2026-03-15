@@ -253,17 +253,28 @@ def _generate_synthetic_entities(n: int, seed: int = 42) -> Tuple[List[Entity], 
         "Inequality":"theorem","Identity":"theorem","Formula":"theorem","Axiom":"axiom",
     }
     entities = []
+    seen_names: set = set()
     for i in range(n):
         topic  = rng.choice(topics)
         obj    = rng.choice(objects)
         area   = rng.choice(areas)
         suffix = f" ({area})" if rng.random() < 0.3 else ""
+        base_name = f"{topic}'s {obj}{suffix}"
+        # Guarantee uniqueness: append a numeric discriminator when name collides
+        name = base_name
+        disambig = 2
+        while name in seen_names:
+            name = f"{base_name} {disambig}"
+            disambig += 1
+        seen_names.add(name)
         entities.append(Entity(
             entity_id=i,
-            name=f"{topic}'s {obj}{suffix}",
+            name=name,
             entity_type=etype_map.get(obj, "theorem"),
         ))
+    # wikitext_map keyed by name — now guaranteed collision-free
     wikitext_map = {e.name: "" for e in entities}
+    assert len(wikitext_map) == n, f"wikitext_map collision: {len(wikitext_map)} != {n}"
     return entities, wikitext_map
 
 
