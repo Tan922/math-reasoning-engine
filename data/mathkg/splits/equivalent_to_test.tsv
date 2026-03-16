@@ -1,0 +1,177 @@
+head_id	head_name	relation	tail_id	tail_name	confidence	source
+3370	Definition:Set of Sets	equivalent_to	15699	Definition:Indexed Family	0.9	equiv_section
+753	Definition:Summation	equivalent_to	22326	Definition:Iterated Binary Operation over Finite Set	0.9	equiv_section
+384	Definition:Totally Ordered Set	equivalent_to	15645	Definition:Strictly Totally Ordered Set	0.9	equiv_section
+1122	Definition:Topological Space	equivalent_to	8956	Definition:Final Topology	0.9	equiv_section
+580	Definition:Ring Zero	equivalent_to	614	Definition:Field (Abstract Algebra)	0.9	equiv_section
+3397	Definition:Venn Diagram	equivalent_to	3418	Definition:Euler Diagram	0.9	equiv_section
+15458	Definition:Positive Number	equivalent_to	15925	Definition:Additive Inverse/Number	0.9	equiv_section
+15032	Definition:Supremum Metric/Bounded Real Functions on Interval	equivalent_to	8908	Definition:Metric	0.9	equiv_section
+16774	Definition:Isotope	equivalent_to	16786	Definition:Radioactive Decay/Stable	0.9	equiv_section
+24921	Definition:Norm/Bounded Linear Transformation	equivalent_to	24939	Definition:Norm on Bounded Linear Transformation	0.9	equiv_section
+349	Definition:Well-Defined	equivalent_to	8692	Definition:Unambiguous	0.9	equiv_section
+578	Definition:Ring (Abstract Algebra)	equivalent_to	21615	Definition:Field Norm of Complex Number	0.9	equiv_section
+12547	Definition:Unsatisfiable/Boolean Interpretations	equivalent_to	12550	Definition:Inconsistent Formula	0.9	equiv_section
+6413	Definition:Image (Set Theory)/Relation	equivalent_to	22776	Definition:Direct Image Mapping of Relation	0.9	equiv_section
+25569	Definition:Sphere/Normed Division Ring	equivalent_to	27042	Sphere in Normed Division Ring is Sphere in Induced Metric	0.9	equiv_section
+19	Definition:Set	equivalent_to	4593	Definition:Hom Class	0.9	equiv_section
+9265	Definition:Difference Space	equivalent_to	25623	Definition:Tangent Space (Affine Geometry)	0.9	equiv_section
+12328	Definition:Unsatisfiable/Formula	equivalent_to	7881	Definition:Proof System	0.9	equiv_section
+16587	Definition:Structure for Predicate Logic	equivalent_to	2396	Definition:Vocabulary	0.9	equiv_section
+731	Definition:Infinite Set	equivalent_to	11835	Infinite Number of Primes of form 4n - 1	0.9	equiv_section
+25569	Definition:Sphere/Normed Division Ring	equivalent_to	1567	Definition:Sphere	0.9	equiv_section
+7533	Definition:Strictly Positive/Integer	equivalent_to	13341	Definition:Natural Numbers	0.9	equiv_section
+6595	Definition:Vector	equivalent_to	12905	Definition:Complex Number as Vector	0.9	equiv_section
+274	Definition:Graph (Graph Theory)	equivalent_to	2670	Definition:Spanning Subgraph	0.9	equiv_section
+9989	Definition:Truth Value/Aristotelian Logic	equivalent_to	30	Definition:Statement	0.9	equiv_section
+9435	Definition:Cartesian Closed Category	equivalent_to	16277	Definition:Category Theory	0.9	equiv_section
+12316	Definition:Model (Logic)	equivalent_to	2309	Definition:Singular Boolean Function	0.9	equiv_section
+7122	Definition:Projection (Mapping Theory)/First Projection	equivalent_to	123	Definition:Ordered Pair	0.9	equiv_section
+2271	Definition:WFF	equivalent_to	10646	Definition:Well-Formed Part/Proper Well-Formed Part	0.9	equiv_section
+16883	Definition:Cycloid/Generating Circle	equivalent_to	16884	Definition:Generating Circle of Cycloid	0.9	equiv_section
+21048	Definition:Ore Number	equivalent_to	3605	Definition:Harmonic Number	0.9	equiv_section
+311	Definition:Surjection	equivalent_to	344	Definition:Quotient Mapping	0.9	equiv_section
+25	Definition:Subset	equivalent_to	6413	Definition:Image (Set Theory)/Relation	0.9	equiv_section
+19601	Definition:Functional/Real	equivalent_to	6123	Definition:Codomain of Mapping	0.9	equiv_section
+12541	Definition:Tautology/Formal Semantics	equivalent_to	12370	Definition:Structure (Formal Systems)	0.9	equiv_section
+14939	Definition:Proportion/Continued	equivalent_to	5531	Definition:Continued Proportion	0.9	equiv_section
+4194	Definition:Implied Constant	equivalent_to	13830	Definition:Big-O Notation/Implied Constant	0.9	equiv_section
+27496	Definition:Bloom-Schoenberg Number	equivalent_to	27495	Definition:Kakeya's Constant	0.9	equiv_section
+2862	Definition:Equation	equivalent_to	2420	Definition:General Solution	0.9	equiv_section
+1122	Definition:Topological Space	equivalent_to	9088	Definition:Compact Topological Space/Subspace	0.9	equiv_section
+18846	Definition:Sealed-Bid Auction/Second Price	equivalent_to	18847	Definition:Second Price Auction	0.9	equiv_section
+3535	Definition:Identification Topology	equivalent_to	8956	Definition:Final Topology	0.9	equiv_section
+10684	Definition:Polygon/Height	equivalent_to	1212	Definition:Perpendicular	0.9	equiv_section
+27041	Closed Ball in Normed Division Ring is Closed Ball in Induced Metric	equivalent_to	25530	Definition:Closed Ball/Normed Division Ring	0.9	equiv_section
+7245	Definition:Space of Measurable Functions	equivalent_to	7239	Definition:Extended Real-Valued Function	0.9	equiv_section
+9669	Definition:Quotient Epimorphism/Group	equivalent_to	9673	Definition:Quotient Ring Epimorphism	0.9	equiv_section
+405	Definition:Well-Ordered Set	equivalent_to	7114	Definition:Strict Lower Closure	0.9	equiv_section
+7737	Definition:Rig	equivalent_to	130	Definition:Algebraic Structure	0.9	equiv_section
+16759	Definition:Chemical Element	equivalent_to	16786	Definition:Radioactive Decay/Stable	0.9	equiv_section
+11438	Definition:Sine/Definition from Circle	equivalent_to	1208	Definition:Radius of Circle	0.9	equiv_section
+319	Definition:Permutation	equivalent_to	3853	Definition:Cycle Type	0.9	equiv_section
+16021	Definition:Open Ray	equivalent_to	9858	Definition:Ray (Order Theory)	0.9	equiv_section
+27492	Definition:Kronecker's Constant	equivalent_to	27490	Definition:Meissel-Mertens Constant	0.9	equiv_section
+10006	Definition:Superimplicant	equivalent_to	10002	Definition:Conditional/Superimplicant	0.9	equiv_section
+15301	Definition:Neighborhood Filter/Point	equivalent_to	15313	Definition:Neighborhood Filter of Point	0.9	equiv_section
+311	Definition:Surjection	equivalent_to	736	Cardinality of Codomain of Surjection	0.9	equiv_section
+26266	Definition:Modified Bessel Function/First Kind	equivalent_to	26265	Definition:Order of Modified Bessel Function	0.9	equiv_section
+130	Definition:Algebraic Structure	equivalent_to	3370	Definition:Set of Sets	0.9	equiv_section
+27277	Definition:Nautical Mile	equivalent_to	27278	Definition:Admiralty Mile	0.9	equiv_section
+10889	Definition:Tree (Graph Theory)/Node	equivalent_to	2329	Definition:Tree (Graph Theory)	0.9	equiv_section
+3561	Definition:Cayley Table	equivalent_to	8526	Definition:Two (Boolean Algebra)	0.9	equiv_section
+2358	Definition:Labeled Tree for Propositional Logic/Hypothesis Set	equivalent_to	2352	Definition:Propositional Tableau	0.9	equiv_section
+19973	Definition:Ramanujan-Nagell Number	equivalent_to	837	Definition:Prime Number	0.9	equiv_section
+1121	Definition:Metric Space	equivalent_to	15032	Definition:Supremum Metric/Bounded Real Functions on Interval	0.9	equiv_section
+13341	Definition:Natural Numbers	equivalent_to	7533	Definition:Strictly Positive/Integer	0.9	equiv_section
+16238	Definition:Real Analysis	equivalent_to	27093	Definition:Zero Mapping	0.9	equiv_section
+25420	Definition:Gillion	equivalent_to	22626	Definition:Short Scale	0.9	equiv_section
+16277	Definition:Category Theory	equivalent_to	134	Definition:Submagma	0.9	equiv_section
+11467	Definition:Symmetry Group of Square	equivalent_to	1572	Definition:Dihedral Group	0.9	equiv_section
+7081	Definition:Series of Measures	equivalent_to	747	Definition:Sequence	0.9	equiv_section
+24427	Summation of Products of n Numbers taken m at a time with Repetitions	equivalent_to	6667	Definition:Integer Interval	0.9	equiv_section
+127	Definition:Mapping	equivalent_to	6975	Definition:Dirac Measure	0.9	equiv_section
+3455	Definition:Bound Variable	equivalent_to	2392	Definition:Free Occurrence	0.9	equiv_section
+3157	Bernoulli Process as Geometric Distribution	equivalent_to	3154	Definition:Success	0.9	equiv_section
+2392	Definition:Free Occurrence	equivalent_to	8753	Definition:Variable	0.9	equiv_section
+20139	Definition:Cullen Number	equivalent_to	21066	Definition:Woodall Number	0.9	equiv_section
+2390	Definition:Bound Occurrence	equivalent_to	2392	Definition:Free Occurrence	0.9	equiv_section
+27398	Definition:Hundred	equivalent_to	19734	Definition:Short Hundred	0.9	equiv_section
+7881	Definition:Proof System	equivalent_to	12328	Definition:Unsatisfiable/Formula	0.9	equiv_section
+3168	Definition:Shifted Geometric Distribution	equivalent_to	3157	Bernoulli Process as Geometric Distribution	0.9	equiv_section
+12905	Definition:Complex Number as Vector	equivalent_to	6595	Definition:Vector	0.9	equiv_section
+9672	Definition:Quotient Epimorphism/Ring	equivalent_to	9671	Definition:Quotient Group Epimorphism	0.9	equiv_section
+3239	Definition:Differentiability Class	equivalent_to	11343	Definition:Piecewise Continuously Differentiable Function	0.9	equiv_section
+30	Definition:Statement	equivalent_to	40	Definition:Symbol	0.9	equiv_section
+6614	Definition:Idempotent Operator	equivalent_to	6600	Definition:Hermitian Operator	0.9	equiv_section
+16631	Definition:Hendecagon/Regular	equivalent_to	16649	Definition:Regular Undecagon	0.9	equiv_section
+23698	Definition:Left Linear Ring Action	equivalent_to	23680	Definition:Linear Ring Action	0.9	equiv_section
+7245	Definition:Space of Measurable Functions	equivalent_to	1698	Definition:Real-Valued Function	0.9	equiv_section
+9718	Definition:Bounded Lattice	equivalent_to	5947	Definition:Identity Element	0.9	equiv_section
+578	Definition:Ring (Abstract Algebra)	equivalent_to	580	Definition:Ring Zero	0.9	equiv_section
+27040	Open Ball in Normed Division Ring is Open Ball in Induced Metric	equivalent_to	25529	Definition:Open Ball/Normed Division Ring	0.9	equiv_section
+6303	Definition:Hilbert Space	equivalent_to	6614	Definition:Idempotent Operator	0.9	equiv_section
+3455	Definition:Bound Variable	equivalent_to	2390	Definition:Bound Occurrence	0.9	equiv_section
+9377	Definition:Cocone	equivalent_to	9334	Definition:Cone (Category Theory)	0.9	equiv_section
+5098	Definition:Order Indiscernible	equivalent_to	20	Definition:Element	0.9	equiv_section
+127	Definition:Mapping	equivalent_to	22587	Second Principle of Recursive Definition	0.9	equiv_section
+123	Definition:Ordered Pair	equivalent_to	7122	Definition:Projection (Mapping Theory)/First Projection	0.9	equiv_section
+16315	Definition:Vector Analysis	equivalent_to	1698	Definition:Real-Valued Function	0.9	equiv_section
+7695	Definition:Column of Matrix	equivalent_to	1227	Definition:Matrix	0.9	equiv_section
+16786	Definition:Radioactive Decay/Stable	equivalent_to	16763	Definition:Radioactive Element	0.9	equiv_section
+16098	Definition:Mapping Induced on Powerset by Inverse of Mapping	equivalent_to	16099	Definition:Inverse Image Mapping/Mapping	0.9	equiv_section
+63	Definition:Premise	equivalent_to	72	Definition:Sequent	0.9	equiv_section
+3369	Definition:Philosophical Position	equivalent_to	24216	Definition:Combination with Repetition	0.9	equiv_section
+14999	Definition:Chebyshev Distance/General Definition	equivalent_to	1182	Definition:Real Number Plane	0.9	equiv_section
+6413	Definition:Image (Set Theory)/Relation	equivalent_to	6129	Definition:Preimage of Relation	0.9	equiv_section
+11438	Definition:Sine/Definition from Circle	equivalent_to	1587	Definition:Sine	0.9	equiv_section
+10906	Definition:Ancestor Node	equivalent_to	11955	Definition:Labeled Tree for Propositional Logic/Ancestor WFF	0.9	equiv_section
+88	Definition:Contingent Statement	equivalent_to	12005	Definition:Boolean Interpretation	0.9	equiv_section
+125	Definition:Cartesian Product	equivalent_to	7123	Definition:Projection (Mapping Theory)/Second Projection	0.9	equiv_section
+9775	Definition:Dual Ordering/Dual Ordered Set	equivalent_to	362	Definition:Partially Ordered Set	0.9	equiv_section
+2555	Definition:Loop-Multigraph	equivalent_to	2556	Definition:Loop-Graph	0.9	equiv_section
+11399	Definition:Radial Coordinate	equivalent_to	11398	Definition:Polar Coordinates/Radial Coordinate	0.9	equiv_section
+14373	Definition:Vertical Angles	equivalent_to	1444	Two Straight Lines make Equal Opposite Angles	0.9	equiv_section
+19527	Definition:Foiaș Constant/Second	equivalent_to	19526	Definition:Second Foiaș Constant	0.9	equiv_section
+1156	Definition:Real Vector Space	equivalent_to	1754	Definition:Euclidean Geometry	0.9	equiv_section
+3239	Definition:Differentiability Class	equivalent_to	885	Definition:Real Function	0.9	equiv_section
+23932	Definition:Laplacian	equivalent_to	17475	Definition:Harmonic Function	0.9	equiv_section
+2271	Definition:WFF	equivalent_to	2388	Definition:Well-Formed Part	0.9	equiv_section
+750	Definition:Operation	equivalent_to	3370	Definition:Set of Sets	0.9	equiv_section
+6827	Definition:Sequence/Empty Sequence	equivalent_to	25225	Definition:Null Sequence	0.9	equiv_section
+5777	Definition:Multiplicative Identity	equivalent_to	5676	Definition:Unit of Algebra	0.9	equiv_section
+25	Definition:Subset	equivalent_to	220	Definition:Image (Set Theory)	0.9	equiv_section
+14999	Definition:Chebyshev Distance/General Definition	equivalent_to	16110	Definition:Finite Cartesian Product	0.9	equiv_section
+344	Definition:Quotient Mapping	equivalent_to	149	Definition:Equivalence Class	0.9	equiv_section
+2624	Definition:Total Preordering	equivalent_to	18792	Definition:Preference Relation	0.9	equiv_section
+21113	Definition:Highly Abundant Number	equivalent_to	20750	Definition:Highly Composite Number	0.9	equiv_section
+6600	Definition:Hermitian Operator	equivalent_to	6614	Definition:Idempotent Operator	0.9	equiv_section
+22308	Definition:Field of Rational Fractions	equivalent_to	24034	Definition:Field of Rational Functions	0.9	equiv_section
+19891	Definition:Big-O Notation/Also known as	equivalent_to	5867	Definition:Big-O Notation	0.9	equiv_section
+20568	Definition:Amicable Pair	equivalent_to	21200	Definition:Amicable Triplet	0.9	equiv_section
+281	Definition:Quotient Set	equivalent_to	282	Fundamental Theorem on Equivalence Relations	0.9	equiv_section
+1121	Definition:Metric Space	equivalent_to	1156	Definition:Real Vector Space	0.9	equiv_section
+9671	Definition:Quotient Group Epimorphism	equivalent_to	9672	Definition:Quotient Epimorphism/Ring	0.9	equiv_section
+8852	Definition:Closed under Mapping	equivalent_to	127	Definition:Mapping	0.9	equiv_section
+571	Definition:Entropic Structure	equivalent_to	573	Abelian Group Induces Entropic Structure	0.9	equiv_section
+16032	Definition:Infinite Structure	equivalent_to	16029	Definition:Order of Structure/Infinite Structure	0.9	equiv_section
+21069	Definition:Woodall Prime	equivalent_to	837	Definition:Prime Number	0.9	equiv_section
+9714	Definition:Lattice (Order Theory)	equivalent_to	9718	Definition:Bounded Lattice	0.9	equiv_section
+336	Definition:Set of All Mappings	equivalent_to	150	Definition:Power Set	0.9	equiv_section
+9673	Definition:Quotient Ring Epimorphism	equivalent_to	9669	Definition:Quotient Epimorphism/Group	0.9	equiv_section
+47	Definition:Symbolic Logic	equivalent_to	33	Definition:Logic	0.9	equiv_section
+767	Definition:Integer	equivalent_to	22608	Definition:Polydivisible Number	0.9	equiv_section
+127	Definition:Mapping	equivalent_to	8852	Definition:Closed under Mapping	0.9	equiv_section
+3318	Definition:Distance Function	equivalent_to	14999	Definition:Chebyshev Distance/General Definition	0.9	equiv_section
+2550	Condition for Edge to be Bridge	equivalent_to	2336	Definition:Cycle (Graph Theory)	0.9	equiv_section
+11862	Definition:Language of Propositional Logic/Formal Grammar	equivalent_to	11863	Definition:Language of Propositional Logic	0.9	equiv_section
+1128	Definition:Smooth Real Function	equivalent_to	11343	Definition:Piecewise Continuously Differentiable Function	0.9	equiv_section
+126	Definition:Relation	equivalent_to	30	Definition:Statement	0.9	equiv_section
+123	Definition:Ordered Pair	equivalent_to	7123	Definition:Projection (Mapping Theory)/Second Projection	0.9	equiv_section
+4093	Definition:Valued Field	equivalent_to	24917	Definition:Norm/Division Ring	0.9	equiv_section
+3286	Definition:Length (Linear Measure)	equivalent_to	14732	Definition:Commensurable in Square Only	0.9	equiv_section
+19354	Definition:Magic Cube	equivalent_to	19350	Definition:Perfect Magic Cube	0.9	equiv_section
+493	Definition:Internal Direct Product	equivalent_to	7135	Definition:External Direct Product/General Definition	0.9	equiv_section
+2144	Definition:Partial Function	equivalent_to	45	Definition:Function	0.9	equiv_section
+6827	Definition:Sequence/Empty Sequence	equivalent_to	9025	Definition:Convergent Sequence (Analysis)	0.9	equiv_section
+15032	Definition:Supremum Metric/Bounded Real Functions on Interval	equivalent_to	1121	Definition:Metric Space	0.9	equiv_section
+1122	Definition:Topological Space	equivalent_to	15328	Definition:Topological Space Induced by Neighborhood Space	0.9	equiv_section
+7116	Definition:Strict Upper Closure	equivalent_to	7119	Definition:Upper Closure	0.9	equiv_section
+27093	Definition:Zero Mapping	equivalent_to	25827	Definition:Zero Function	0.9	equiv_section
+7239	Definition:Extended Real-Valued Function	equivalent_to	7462	Definition:Space of Integrable Functions	0.9	equiv_section
+17830	Definition:Field Norm of Quaternion	equivalent_to	3968	Definition:Quaternion	0.9	equiv_section
+12340	Definition:Unsatisfiable/Set of Formulas	equivalent_to	7881	Definition:Proof System	0.9	equiv_section
+20294	Definition:Ring of Polynomial Forms	equivalent_to	10541	Definition:Polynomial Ring	0.9	equiv_section
+14939	Definition:Proportion/Continued	equivalent_to	14943	Definition:Continuously Proportional	0.9	equiv_section
+15402	Definition:Group Theory	equivalent_to	142	Definition:Subset Product	0.9	equiv_section
+6827	Definition:Sequence/Empty Sequence	equivalent_to	10948	Definition:Null Sequence (Analysis)	0.9	equiv_section
+12369	Definition:Valid (Formal Systems)	equivalent_to	12541	Definition:Tautology/Formal Semantics	0.9	equiv_section
+127	Definition:Mapping	equivalent_to	18820	Definition:Payoff Function	0.9	equiv_section
+26268	Definition:Modified Bessel Function/Second Kind	equivalent_to	26263	Definition:Modified Bessel Function	0.9	equiv_section
+3252	Intersection with Complement is Empty iff Subset	equivalent_to	25	Definition:Subset	0.9	equiv_section
+6244	Definition:Ambiguity	equivalent_to	8688	Definition:Simple Random Sample	0.9	equiv_section
+3621	Definition:Algebra over Ring	equivalent_to	22286	Definition:Unital Associative Commutative Algebra	0.9	equiv_section
+19350	Definition:Perfect Magic Cube	equivalent_to	19354	Definition:Magic Cube	0.9	equiv_section
+25827	Definition:Zero Function	equivalent_to	27093	Definition:Zero Mapping	0.9	equiv_section
+18790	Definition:Consequence (Game Theory)	equivalent_to	18820	Definition:Payoff Function	0.9	equiv_section
+4468	Definition:Prime Spectrum of Ring	equivalent_to	3890	Definition:Commutative and Unitary Ring	0.9	equiv_section

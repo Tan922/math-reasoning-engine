@@ -1,0 +1,129 @@
+head_id	head_name	relation	tail_id	tail_name	confidence	source
+22326	Definition:Iterated Binary Operation over Finite Set	generalizes	753	Definition:Summation	0.9	special_cases_section
+22711	Definition:Inverse Image Presheaf	generalizes	22973	Definition:Restriction of Presheaf to Open Set	0.9	generalizations_section
+2710	Definition:Continuous Mapping (Topology)	generalizes	2709	Definition:Continuous Real Function	0.9	generalizations_section
+22285	Definition:Polynomial Algebra	generalizes	10541	Definition:Polynomial Ring	0.9	generalizations_section
+4049	Definition:Radical of Ideal of Ring	generalizes	4056	Definition:Nilradical of Ring	0.9	special_cases_section
+21411	Definition:Continued Fraction Expansion/Real Number	generalizes	23120	Definition:Continued Fraction Expansion of Laurent Series	0.9	generalizations_section
+23576	Definition:Interval of Ordered Set	generalizes	865	Definition:Real Interval	0.9	generalizations_section
+838	Definition:Composite Number	generalizes	2146	Definition:Positive Integer	0.9	special_cases_section
+3918	Definition:Generated Ideal of Ring	generalizes	22980	Definition:Sum of Ideals of Ring	0.9	generalizations_section
+3127	Probability of Occurrence of At Least One Independent Event	generalizes	3126	Definition:Occurrence of Event	0.95	corollaries_section
+3929	Definition:Prime Ideal of Ring	generalizes	4536	Definition:Prime Element of Ring	0.9	special_cases_section
+23104	Definition:Convolution of Mappings on Divisor-Finite Monoid	generalizes	4403	Definition:Dirichlet Convolution	0.9	generalizations_section
+5631	Definition:Contravariant Functor	generalizes	5630	Definition:Inclusion-Reversing Mapping	0.9	generalizations_section
+22316	Definition:Continuous Real Function at Point	generalizes	2709	Definition:Continuous Real Function	0.9	generalizations_section
+2709	Definition:Continuous Real Function	generalizes	2712	Definition:Continuous Mapping (Metric Space)	0.9	generalizations_section
+4050	Definition:Radical Ideal of Ring	generalizes	1917	Definition:Square-Free Integer	0.9	special_cases_section
+22398	Definition:Multiple Pointed Set	generalizes	22395	Definition:Pointed Set	0.9	generalizations_section
+22326	Definition:Iterated Binary Operation over Finite Set	generalizes	22327	Definition:Iterated Binary Operation over Set with Finite Support	0.9	generalizations_section
+5630	Definition:Inclusion-Reversing Mapping	generalizes	5631	Definition:Contravariant Functor	0.9	generalizations_section
+10542	Units of Ring of Polynomial Forms over Commutative Ring	generalizes	10543	Definition:Indeterminate (Polynomial Theory)	0.95	corollaries_section
+4536	Definition:Prime Element of Ring	generalizes	837	Definition:Prime Number	0.9	generalizations_section
+6185	Definition:Strictly Well-Founded Relation	generalizes	2210	Definition:Well-Founded Ordered Set	0.9	generalizations_section
+6420	Definition:Image of Mapping	generalizes	16091	Definition:Direct Image Mapping/Mapping	0.9	generalizations_section
+2868	Definition:Real Number Line	generalizes	2709	Definition:Continuous Real Function	0.9	generalizations_section
+6413	Definition:Image (Set Theory)/Relation	generalizes	6420	Definition:Image of Mapping	0.9	special_cases_section
+574	Definition:Ringoid (Abstract Algebra)	generalizes	578	Definition:Ring (Abstract Algebra)	0.9	generalizations_section
+22327	Definition:Iterated Binary Operation over Set with Finite Support	generalizes	22223	Definition:Summation over Set with Finite Support	0.9	special_cases_section
+16096	Definition:Inverse Image Mapping/Relation	generalizes	22782	Definition:Inverse Image Mapping of Mapping	0.9	special_cases_section
+6872	Vector Subspace of Real Vector Space	generalizes	7785	Definition:Non-Empty Set	0.95	corollaries_section
+1982	Definition:Fractional Part	generalizes	2926	Definition:Modulo Operation	0.9	generalizations_section
+130	Definition:Algebraic Structure	generalizes	976	Definition:Group Direct Product	0.9	generalizations_section
+11911	Definition:Continued Fraction/Finite	generalizes	1964	Definition:Simple Finite Continued Fraction	0.9	special_cases_section
+23787	Definition:Noncommutative Local Ring	generalizes	23526	Definition:Local Ring/Commutative	0.9	generalizations_section
+1697	Definition:Complex Modulus	generalizes	22507	Definition:Absolute Value of Real Number	0.9	special_cases_section
+2709	Definition:Continuous Real Function	generalizes	2710	Definition:Continuous Mapping (Topology)	0.9	generalizations_section
+578	Definition:Ring (Abstract Algebra)	generalizes	574	Definition:Ringoid (Abstract Algebra)	0.9	generalizations_section
+22973	Definition:Restriction of Presheaf to Open Set	generalizes	22711	Definition:Inverse Image Presheaf	0.9	generalizations_section
+798	Definition:Absolute Value	generalizes	22509	Complex Modulus of Real Number equals Absolute Value	0.9	generalizations_section
+3946	Definition:Generator of Module	generalizes	22446	Definition:Generator of Ideal of Ring	0.9	generalizations_section
+707	Definition:Field of Quotients	generalizes	4466	Definition:Localization of Ring	0.9	generalizations_section
+2709	Definition:Continuous Real Function	generalizes	1706	Definition:Usual Metric	0.9	generalizations_section
+16092	Definition:Direct Image Mapping/Relation	generalizes	6416	Definition:Image of Relation	0.9	generalizations_section
+23511	Definition:Inclusion-Preserving Mapping	generalizes	5893	Definition:Increasing Mapping	0.9	generalizations_section
+3127	Probability of Occurrence of At Least One Independent Event	generalizes	3138	Definition:Outcome	0.95	corollaries_section
+5632	Definition:Decreasing Mapping	generalizes	5630	Definition:Inclusion-Reversing Mapping	0.9	generalizations_section
+25235	Definition:Convergent Sequence/Normed Division Ring	generalizes	22523	Definition:Convergent Sequence in Metric Space	0.9	generalizations_section
+11895	Definition:Continuous Real-Valued Vector Function	generalizes	2709	Definition:Continuous Real Function	0.9	generalizations_section
+2709	Definition:Continuous Real Function	generalizes	22316	Definition:Continuous Real Function at Point	0.9	generalizations_section
+5893	Definition:Increasing Mapping	generalizes	23511	Definition:Inclusion-Preserving Mapping	0.9	generalizations_section
+23397	Definition:Torsion Subgroup	generalizes	23392	Definition:Torsion Submodule	0.9	generalizations_section
+2210	Definition:Well-Founded Ordered Set	generalizes	6185	Definition:Strictly Well-Founded Relation	0.9	generalizations_section
+23614	Ideal Contained in Finite Union of Prime Ideals	generalizes	119	Definition:Group	0.9	generalizations_section
+1809	Definition:Riemann Zeta Function	generalizes	2007	Definition:Dirichlet Series	0.9	generalizations_section
+1494	Definition:Concatenation (Topology)	generalizes	19933	Definition:Concatenation of Paths	0.9	special_cases_section
+23606	Definition:Product of Fractional Ideals	generalizes	4545	Definition:Product of Ideals of Ring	0.9	generalizations_section
+23392	Definition:Torsion Submodule	generalizes	23397	Definition:Torsion Subgroup	0.9	generalizations_section
+646	Definition:Irreducible Element of Ring	generalizes	10620	Definition:Irreducible Polynomial	0.9	special_cases_section
+3127	Probability of Occurrence of At Least One Independent Event	generalizes	3046	Definition:Probability	0.95	corollaries_section
+837	Definition:Prime Number	generalizes	4536	Definition:Prime Element of Ring	0.9	generalizations_section
+1697	Definition:Complex Modulus	generalizes	798	Definition:Absolute Value	0.9	generalizations_section
+20714	Definition:Basis of Vector Space	generalizes	20711	Definition:Basis of Module	0.9	generalizations_section
+2709	Definition:Continuous Real Function	generalizes	2868	Definition:Real Number Line	0.9	generalizations_section
+5926	Definition:Modulo 1	generalizes	1982	Definition:Fractional Part	0.9	generalizations_section
+22509	Complex Modulus of Real Number equals Absolute Value	generalizes	798	Definition:Absolute Value	0.9	generalizations_section
+5630	Definition:Inclusion-Reversing Mapping	generalizes	5632	Definition:Decreasing Mapping	0.9	generalizations_section
+23120	Definition:Continued Fraction Expansion of Laurent Series	generalizes	21411	Definition:Continued Fraction Expansion/Real Number	0.9	generalizations_section
+23043	Definition:Closed Element under Closure Operator	generalizes	10353	Definition:Closed Set/Closure Operator	0.9	generalizations_section
+10542	Units of Ring of Polynomial Forms over Commutative Ring	generalizes	20294	Definition:Ring of Polynomial Forms	0.95	corollaries_section
+2709	Definition:Continuous Real Function	generalizes	11896	Definition:Continuous Real-Valued Function	0.9	generalizations_section
+10542	Units of Ring of Polynomial Forms over Commutative Ring	generalizes	20	Definition:Element	0.95	corollaries_section
+22655	Definition:Module Structure of Polynomial Ring	generalizes	22641	Definition:Restriction of Scalars of Module	0.9	generalizations_section
+2712	Definition:Continuous Mapping (Metric Space)	generalizes	2709	Definition:Continuous Real Function	0.9	generalizations_section
+15303	Definition:Separated by Neighborhoods/Points	generalizes	15304	Definition:Sets Separated by Neighborhoods	0.9	generalizations_section
+6254	Definition:Preimage of Mapping	generalizes	16099	Definition:Inverse Image Mapping/Mapping	0.9	generalizations_section
+4525	Definition:Ring of Integers of Number Field	generalizes	25921	Definition:Ring of Eisenstein Integers	0.9	special_cases_section
+23507	Definition:Divisor of Ring Element	generalizes	6002	Definition:Divisor (Algebra)/Integer	0.9	generalizations_section
+4049	Definition:Radical of Ideal of Ring	generalizes	7497	Definition:Zero Ideal	0.9	special_cases_section
+976	Definition:Group Direct Product	generalizes	130	Definition:Algebraic Structure	0.9	generalizations_section
+3127	Probability of Occurrence of At Least One Independent Event	generalizes	3113	Definition:Independent Events	0.95	corollaries_section
+2926	Definition:Modulo Operation	generalizes	1982	Definition:Fractional Part	0.9	generalizations_section
+5630	Definition:Inclusion-Reversing Mapping	generalizes	22371	Definition:Set Ordered by Subset Relation	0.9	generalizations_section
+22641	Definition:Restriction of Scalars of Module	generalizes	22655	Definition:Module Structure of Polynomial Ring	0.9	generalizations_section
+21604	Definition:Generated Submodule	generalizes	3918	Definition:Generated Ideal of Ring	0.9	generalizations_section
+10541	Definition:Polynomial Ring	generalizes	22285	Definition:Polynomial Algebra	0.9	generalizations_section
+3929	Definition:Prime Ideal of Ring	generalizes	9595	Definition:Prime Ideal (Order Theory)	0.9	generalizations_section
+22388	Definition:Total Ring of Fractions	generalizes	707	Definition:Field of Quotients	0.9	generalizations_section
+4466	Definition:Localization of Ring	generalizes	19926	Definition:Field of Fractions	0.9	special_cases_section
+22327	Definition:Iterated Binary Operation over Set with Finite Support	generalizes	22326	Definition:Iterated Binary Operation over Finite Set	0.9	generalizations_section
+15026	Definition:Continuous at Point of Metric Space	generalizes	2709	Definition:Continuous Real Function	0.9	generalizations_section
+3929	Definition:Prime Ideal of Ring	generalizes	23578	Definition:Prime Ideal of Number Field	0.9	generalizations_section
+798	Definition:Absolute Value	generalizes	1697	Definition:Complex Modulus	0.9	generalizations_section
+4466	Definition:Localization of Ring	generalizes	23037	Definition:Localization of Ring at Element	0.9	special_cases_section
+485	Definition:External Direct Product	generalizes	976	Definition:Group Direct Product	0.9	generalizations_section
+865	Definition:Real Interval	generalizes	23576	Definition:Interval of Ordered Set	0.9	generalizations_section
+4466	Definition:Localization of Ring	generalizes	23036	Definition:Localization of Ring at Prime Ideal	0.9	special_cases_section
+1961	Definition:Continued Fraction	generalizes	11923	Definition:Generalized Continued Fraction	0.9	generalizations_section
+492	Definition:Algebraic Substructure	generalizes	137	Definition:Subsemigroup	0.9	generalizations_section
+707	Definition:Field of Quotients	generalizes	22388	Definition:Total Ring of Fractions	0.9	generalizations_section
+23663	Definition:Ideal Quotient	generalizes	23670	Definition:Annihilator of Ideal of Ring	0.9	special_cases_section
+22446	Definition:Generator of Ideal of Ring	generalizes	3946	Definition:Generator of Module	0.9	generalizations_section
+865	Definition:Real Interval	generalizes	7078	Definition:Half-Open Rectangle	0.9	generalizations_section
+23526	Definition:Local Ring/Commutative	generalizes	23787	Definition:Noncommutative Local Ring	0.9	generalizations_section
+1974	General Stokes' Theorem	generalizes	4493	Definition:Chart	0.9	special_cases_section
+23578	Definition:Prime Ideal of Number Field	generalizes	3929	Definition:Prime Ideal of Ring	0.9	generalizations_section
+10542	Units of Ring of Polynomial Forms over Commutative Ring	generalizes	4054	Definition:Reduced Ring	0.95	corollaries_section
+10542	Units of Ring of Polynomial Forms over Commutative Ring	generalizes	10494	Definition:Polynomial of Degree Zero	0.95	corollaries_section
+3127	Probability of Occurrence of At Least One Independent Event	generalizes	3043	Definition:Event Space	0.95	corollaries_section
+7078	Definition:Half-Open Rectangle	generalizes	865	Definition:Real Interval	0.9	generalizations_section
+838	Definition:Composite Number	generalizes	837	Definition:Prime Number	0.9	special_cases_section
+9588	Definition:Algebraic Element of Field Extension	generalizes	2865	Definition:Algebraic Number	0.9	special_cases_section
+4525	Definition:Ring of Integers of Number Field	generalizes	15516	Definition:Ring of Gaussian Integers	0.9	special_cases_section
+22776	Definition:Direct Image Mapping of Relation	generalizes	16091	Definition:Direct Image Mapping/Mapping	0.9	generalizations_section
+15516	Definition:Ring of Gaussian Integers	generalizes	4525	Definition:Ring of Integers of Number Field	0.9	generalizations_section
+16099	Definition:Inverse Image Mapping/Mapping	generalizes	6254	Definition:Preimage of Mapping	0.9	generalizations_section
+2709	Definition:Continuous Real Function	generalizes	15026	Definition:Continuous at Point of Metric Space	0.9	generalizations_section
+22980	Definition:Sum of Ideals of Ring	generalizes	142	Definition:Subset Product	0.9	generalizations_section
+22395	Definition:Pointed Set	generalizes	22398	Definition:Multiple Pointed Set	0.9	generalizations_section
+3918	Definition:Generated Ideal of Ring	generalizes	21604	Definition:Generated Submodule	0.9	generalizations_section
+23642	Definition:Finite Algebra over Ring	generalizes	3905	Definition:Finite Field Extension	0.9	special_cases_section
+1982	Definition:Fractional Part	generalizes	5926	Definition:Modulo 1	0.9	generalizations_section
+4466	Definition:Localization of Ring	generalizes	22388	Definition:Total Ring of Fractions	0.9	special_cases_section
+10542	Units of Ring of Polynomial Forms over Commutative Ring	generalizes	592	Definition:Unit of Ring	0.95	corollaries_section
+9595	Definition:Prime Ideal (Order Theory)	generalizes	3929	Definition:Prime Ideal of Ring	0.9	generalizations_section
+22783	Definition:Inverse Image Mapping of Relation	generalizes	16099	Definition:Inverse Image Mapping/Mapping	0.9	generalizations_section
+22655	Definition:Module Structure of Polynomial Ring	generalizes	22871	Definition:Module Structure of Algebra over Ring	0.9	generalizations_section
+4403	Definition:Dirichlet Convolution	generalizes	23104	Definition:Convolution of Mappings on Divisor-Finite Monoid	0.9	generalizations_section
+3127	Probability of Occurrence of At Least One Independent Event	generalizes	3044	Definition:Event	0.95	corollaries_section
+3210	Function of Two Discrete Random Variables	generalizes	2449	Definition:Probability Space	0.95	corollaries_section

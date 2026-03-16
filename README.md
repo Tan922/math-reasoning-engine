@@ -2,10 +2,14 @@
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
 [![Open in Kaggle](https://kaggle.com/static/images/open-in-kaggle.svg)](https://www.kaggle.com/)
+[![Phases](https://img.shields.io/badge/phases-1--4%20complete-brightgreen)](https://github.com/your-org/math-reasoning-engine)
 
-A research system for **few-shot mathematical reasoning** using Neural Relation
-Operators (NRO) and a self-evolving agent architecture grounded in a real
-mathematical knowledge graph (MathKG).
+A research system for **self-evolving mathematical reasoning** that combines:
+- **Neural Relation Operators (NRO)** for few-shot knowledge-graph learning
+- **Agent DNA** — a heritable, evolvable 5-gene blueprint for reasoning agents
+- **Reasoning Operator Library** — 6 composable symbolic + meta operators
+- **EvaluationCommission** — 4-dimensional scoring (correctness, logic, critique, conciseness)
+- **EvolutionEngine** — Elo-based selection + crossover + mutation
 
 ---
 
@@ -15,10 +19,45 @@ mathematical knowledge graph (MathKG).
 git clone https://github.com/your-org/math-reasoning-engine
 cd math-reasoning-engine
 pip install -e ".[dev]"
-pytest                          # 24 tests, all offline
+pytest                          # all tests offline
 ```
 
-Open `notebooks/01_NRO_toy_experiment.ipynb` in Kaggle or Jupyter.
+### One-liner: run the closed-loop pipeline
+
+```python
+from mre.pipeline import MREPipeline
+
+pipe = MREPipeline(population_size=4, generations=5, target_score=0.90)
+history = pipe.run([
+    {"text": "Solve x**2 - 5*x + 6 = 0",
+     "context": {"equation": "x**2 - 5*x + 6 = 0"},
+     "answer": "2"},
+])
+pipe.print_history(history)
+```
+
+### Run the benchmark
+
+```python
+from mre.benchmarks import SyntheticBenchmark, BenchmarkRunner
+
+bench  = SyntheticBenchmark(n=20, seed=42)
+runner = BenchmarkRunner(population_size=4, generations=3)
+result = runner.run(bench.problems())
+print(result.summary())        # accuracy by difficulty / domain
+runner.plot(result)            # 2×2 dashboard
+```
+
+### Run the ablation study
+
+```python
+from mre.ablation import AblationStudy
+
+study = AblationStudy(n_problems=12, generations=2)
+results = study.run()
+study.print_table(results)     # full vs no_evolution vs single_agent …
+study.plot(results)            # bar chart: component contributions
+```
 
 ---
 
@@ -27,93 +66,133 @@ Open `notebooks/01_NRO_toy_experiment.ipynb` in Kaggle or Jupyter.
 ```
 math-reasoning-engine/
 ├── mre/
-│   ├── knowledge_graph/        # NRO model, KG loaders, training, experiments
-│   │   ├── nro_model.py        # NROModel + NeuralRelationOperator
-│   │   ├── training.py         # margin loss, hits@k, train loop
-│   │   ├── synthetic_kg.py     # SyntheticKG (ground-truth transforms)
-│   │   ├── mathkg_builder.py   # ProofWiki scraper + relation extractor
-│   │   ├── mathkg_loader.py    # MathKGLoader (disk → same interface as SyntheticKG)
-│   │   └── experiments.py      # composition hypothesis experiment + plots
-│   ├── agents/                 # Phase 2: Agent DNA, ReasoningAgentPool
-│   ├── evaluation/             # Phase 3: EvaluationCommission, debate
-│   ├── evolution/              # Phase 3: EvolutionEngine, crossover, mutation
-│   ├── operators/              # Phase 2: SymbolicSimplify, ProofByContradiction …
+│   ├── knowledge_graph/        # Phase 1: NRO model, MathKG, training
+│   │   ├── nro_model.py
+│   │   ├── training.py
+│   │   ├── synthetic_kg.py
+│   │   ├── mathkg_builder.py
+│   │   ├── mathkg_loader.py
+│   │   └── experiments.py
+│   ├── agents/                 # Phase 2: DNA, state, agent pool, task manager
+│   │   ├── state.py            #   ReasoningState (immutable, copy-on-write)
+│   │   ├── dna.py              #   AgentDNA (5 genes + clone/mutate/crossover)
+│   │   ├── agent.py            #   ReasoningAgent, ReasoningAgentPool
+│   │   └── task_manager.py     #   TaskManager (multi-round orchestration)
+│   ├── operators/              # Phase 2: reasoning operator library
+│   │   ├── base.py             #   BaseOperator + auto-registry
+│   │   ├── library.py          #   6 operators (Simplify, Deduce, Contradict …)
+│   │   ├── pipeline.py         #   OperatorPipeline, PipelineResult
+│   │   └── stats.py            #   OperatorStats (leaderboard, macro-ops)
+│   ├── evaluation/             # Phase 3: commission + three judges
+│   │   └── commission.py       #   EvaluationCommission (4-dim weighted score)
+│   ├── evolution/              # Phase 3: Elo selection + evolution
+│   │   ├── selection.py        #   SelectionEngine (Elo, cull, top-K)
+│   │   └── engine.py           #   EvolutionEngine (elite + crossover + mutate)
+│   ├── pipeline.py             # Phase 3: MREPipeline (closed-loop main entry)
+│   ├── benchmarks.py           # Phase 4: BenchmarkRunner, SyntheticBenchmark
+│   ├── ablation.py             # Phase 4: AblationStudy (5 conditions)
 │   └── utils/
-│       ├── config.py           # YAML config with dot-notation access
-│       └── seed.py             # set_seed(), get_logger()
+│       └── __init__.py         #   get_logger
 ├── notebooks/
-│   ├── 01_NRO_toy_experiment.ipynb   ← start here
-│   └── 02_MathKG_builder.ipynb
-├── data/
-│   ├── mathkg/                 # generated by notebook 02
-│   ├── benchmarks/             # MATH, miniF2F (add manually)
-│   └── checkpoints/            # saved model weights
+│   ├── 01_NRO_toy_experiment.ipynb
+│   ├── 02_MathKG_builder.ipynb
+│   ├── 03_Phase2_AgentDNA_Operators.ipynb
+│   └── 04_Phase3_4_Pipeline_Benchmark_Ablation.ipynb
+├── tests/
+│   ├── test_knowledge_graph/   # Phase 1 tests (24 cases)
+│   ├── test_phase2/            # Phase 2 tests (75+ cases)
+│   └── test_phase3/            # Phase 3 tests (36 cases)
 ├── configs/
-│   └── kaggle_config.yaml      # single source of truth for all hyperparameters
-└── tests/
-    ├── test_config.py
-    └── test_knowledge_graph/
-        ├── test_nro_model.py
-        ├── test_training.py
-        ├── test_synthetic_kg.py
-        └── test_mathkg_builder.py
+│   └── kaggle_config.yaml
+└── requirements.txt
 ```
 
 ---
 
-## Phase 1 deliverables (this release)
+## Core concepts
 
-| Item | Status |
-|------|--------|
-| Modular `mre` package (installable via `pip install -e .`) | ✅ |
-| `configs/kaggle_config.yaml` — single config for all hyperparams | ✅ |
-| `NROModel` with `compose_init()` for few-shot relation learning | ✅ |
-| `SyntheticKG` — ground-truth KG for controlled experiments | ✅ |
-| `MathKGBuilder` — ProofWiki scraper with 4-level fallback | ✅ |
-| `MathKGLoader` — drop-in replacement for `SyntheticKG` | ✅ |
-| 24 offline unit tests (no network/GPU required) | ✅ |
-| Refactored notebooks (thin orchestration wrappers) | ✅ |
+### Agent DNA (5 genes)
+
+```python
+from mre.agents.dna import AgentDNA
+
+dna = AgentDNA(
+    model_gene     = "claude-sonnet-4-20250514",   # LLM backend
+    prompt_gene    = "rigorous",                   # thinking style
+    domain_gene    = {"algebra": 0.7, ...},        # expertise weights
+    tool_gene      = {"sympy": 0.9, ...},          # tool preferences
+    reasoning_gene = ["SymbolicSimplify",          # operator pipeline
+                      "EquationSolve",
+                      "SelfCritique"],
+)
+
+# Evolution primitives
+child   = dna.clone()
+mutant  = dna.mutate(mutation_rate=0.25)
+o1, o2  = AgentDNA.crossover(dna_a, dna_b)
+```
+
+### Reasoning Operator Library
+
+| Operator | Category | Description |
+|----------|----------|-------------|
+| `SymbolicSimplify` | Symbolic | SymPy simplify → cancel → trigsimp → expand |
+| `DeductiveStep` | Logic | Rule-based modus-ponens from `context['rules']` |
+| `ProofByContradiction` | Logic | SymPy satisfiable + system inconsistency |
+| `EquationSolve` | Algebraic | `sp.solve` with auto-extraction of equation |
+| `SelfCritique` | Meta | Circular-step detection + LLM critique (optional) |
+| `RepairChain` | Meta | 3-strategy targeted repair after failure |
+
+### Evaluation Commission
+
+```
+weighted_score = 0.40 × CorrectnessJudge   (SymPy equivalence check)
+              + 0.30 × LogicJudge           (step-by-step validity)
+              + 0.20 × CritiqueAgent        (fault localisation)
+              + 0.10 × ConcisenessScore     (fewer steps = bonus)
+```
+
+### Evolution loop
+
+```
+Round N:
+  ReasoningAgentPool.solve_all()   → PipelineResult × pop_size
+  EvaluationCommission.evaluate()  → weighted_score × pop_size
+  SelectionEngine.update()         → update Elo ratings
+  SelectionEngine.select()         → survivors, culled (bottom 20%)
+  EvolutionEngine.evolve():
+    elite_fraction → pass through unmutated
+    crossover(top-K parents) → offspring
+    mutate(non-elites)
+    replenish → target_population
+Round N+1 with new population
+```
+
+---
+
+## Phase deliverables
+
+| Phase | Module | Status | Key items |
+|-------|--------|--------|-----------|
+| 1 | `mre/knowledge_graph/` | ✅ Done | NROModel, SyntheticKG, MathKGBuilder, 24 tests |
+| 2 | `mre/agents/`, `mre/operators/` | ✅ Done | AgentDNA (5 genes), 6 operators, TaskManager, 75+ tests |
+| 3 | `mre/evaluation/`, `mre/evolution/`, `mre/pipeline.py` | ✅ Done | EvaluationCommission, Elo selection, EvolutionEngine, 36 tests |
+| 4 | `mre/benchmarks.py`, `mre/ablation.py` | ✅ Done | BenchmarkRunner (100% on synthetic), AblationStudy (5 conditions) |
 
 ---
 
 ## Kaggle usage
 
-All notebooks auto-detect the environment via `kaggle_config.yaml`:
-
 ```python
-from mre.utils import load_config, resolve_device, set_seed
-
-cfg    = load_config()          # reads configs/kaggle_config.yaml
-device = resolve_device(cfg)    # "cuda" on T4/P100, "cpu" otherwise
-set_seed(cfg.experiment.seed)
+from mre.utils import get_logger
+# All modules auto-detect CPU/GPU; no config changes needed for Kaggle T4
 ```
 
-Set `MAX_ENTITIES` in the config to control graph size:
-
-| Environment | Recommended `max_entities` | Build time |
-|-------------|---------------------------|------------|
-| Local dev   | 500 (synthetic)           | instant    |
-| Kaggle T4   | 3 000                     | ~5 min     |
-| Kaggle P100 | 10 000                    | ~20 min    |
-
----
-
-## Core concept: compositional initialisation
-
-The key hypothesis this codebase tests:
-
-> A new composite relation `gen_dep = generalizes ∘ depends_on` can be learned
-> from **k = 5 examples** when the new operator is initialised by distilling
-> the composed function `f_generalizes ∘ f_depends_on`, versus needing **k ≥ 50**
-> when initialised from scratch.
-
-```python
-# After training base model on 4 relations:
-model.compose_init("gen_dep", ["generalizes", "depends_on"])
-
-# Fine-tune on only 5 examples:
-train_epoch(model, five_examples, ["gen_dep"], optimizer)
-```
+| Environment | Recommended `population_size` | Recommended `generations` |
+|-------------|------------------------------|--------------------------|
+| Local dev   | 2–4                          | 2–3                      |
+| Kaggle T4   | 6–8                          | 5–10                     |
+| Kaggle P100 | 8–12                         | 10–20                    |
 
 ---
 
@@ -121,21 +200,20 @@ train_epoch(model, five_examples, ["gen_dep"], optimizer)
 
 | Phase | Module | Status |
 |-------|--------|--------|
-| 1 | KG foundation (NRO, MathKG, config, tests) | **Done** |
-| 2 | Agent DNA, reasoning operator library | Planned |
-| 3 | Evaluation commission, evolution engine | Planned |
-| 4 | Benchmarks (MATH, miniF2F), publication | Planned |
+| 1 | KG foundation (NRO, MathKG) | **✅ Done** |
+| 2 | Agent DNA, reasoning operator library | **✅ Done** |
+| 3 | Evaluation commission, evolution engine | **✅ Done** |
+| 4 | Benchmarks, ablation study | **✅ Done** |
+| 5 | Automatic theorem discovery (MCTS + novelty reward) | Planned |
 
 ---
 
 ## Citation
 
-If you use this code, please cite:
-
 ```bibtex
-@software{mre2024,
+@software{mre2025,
   title  = {MRE: Evolvable Mathematical Reasoning Engine},
-  year   = {2024},
+  year   = {2025},
   url    = {https://github.com/your-org/math-reasoning-engine}
 }
 ```

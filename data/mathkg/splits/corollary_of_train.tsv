@@ -1,0 +1,15 @@
+head_id	head_name	relation	tail_id	tail_name	confidence	source
+3046	Definition:Probability	corollary_of	3127	Probability of Occurrence of At Least One Independent Event	0.95	corollaries_section
+3138	Definition:Outcome	corollary_of	3127	Probability of Occurrence of At Least One Independent Event	0.95	corollaries_section
+8326	Definition:Category of Monoids	corollary_of	8550	Unique Constant in Category of Monoids	0.95	corollaries_section
+8539	Definition:Enough Constants	corollary_of	8550	Unique Constant in Category of Monoids	0.95	corollaries_section
+4054	Definition:Reduced Ring	corollary_of	10542	Units of Ring of Polynomial Forms over Commutative Ring	0.95	corollaries_section
+25182	Definition:Group of Units of Ring	corollary_of	10542	Units of Ring of Polynomial Forms over Commutative Ring	0.95	corollaries_section
+3040	Definition:Experiment	corollary_of	3127	Probability of Occurrence of At Least One Independent Event	0.95	corollaries_section
+7785	Definition:Non-Empty Set	corollary_of	6872	Vector Subspace of Real Vector Space	0.95	corollaries_section
+2449	Definition:Probability Space	corollary_of	3127	Probability of Occurrence of At Least One Independent Event	0.95	corollaries_section
+23869	Definition:Discrete Random Variable	corollary_of	3210	Function of Two Discrete Random Variables	0.95	corollaries_section
+3043	Definition:Event Space	corollary_of	3127	Probability of Occurrence of At Least One Independent Event	0.95	corollaries_section
+20	Definition:Element	corollary_of	10542	Units of Ring of Polynomial Forms over Commutative Ring	0.95	corollaries_section
+3126	Definition:Occurrence of Event	corollary_of	3127	Probability of Occurrence of At Least One Independent Event	0.95	corollaries_section
+3044	Definition:Event	corollary_of	3127	Probability of Occurrence of At Least One Independent Event	0.95	corollaries_section
