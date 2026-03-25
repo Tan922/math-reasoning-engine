@@ -10,6 +10,7 @@ import re
 import sys
 import urllib.parse
 import urllib.request
+from urllib.error import HTTPError
 
 if __package__ in (None, ""):
     repo_root = Path(__file__).resolve().parents[2]
@@ -23,7 +24,8 @@ else:
 
 PROOFWIKI_API = "https://proofwiki.org/w/api.php"
 OLYMPIAD_DATA_SOURCES = {
-    "hf_rows": "https://datasets-server.huggingface.co/rows"
+    "hf_rows": "https://datasets-server.huggingface.co/rows",
+    "hf_splits": "https://datasets-server.huggingface.co/splits",
 }
 HEADERS = {
     "User-Agent": "MathKG-Builder/1.0 (research)",
@@ -272,17 +274,29 @@ class KGBuilder:
         limit: int,
         timeout: int,
     ) -> List[dict]:
-        data = self._fetch_json(
-            OLYMPIAD_DATA_SOURCES["hf_rows"],
-            params={
-                "dataset": dataset,
-                "config": config,
-                "split": split,
-                "offset": 0,
-                "length": limit,
-            },
-            timeout=timeout,
-        ).get("rows", [])
+        params = {
+            "dataset": dataset,
+            "config": config,
+            "split": split,
+            "offset": 0,
+            "length": limit,
+        }
+        try:
+            data = self._fetch_json(
+                OLYMPIAD_DATA_SOURCES["hf_rows"],
+                params=params,
+                timeout=timeout,
+            ).get("rows", [])
+        except HTTPError as exc:
+            if exc.code != 422:
+                raise
+            resolved = self._resolve_hf_config_split(dataset=dataset, split=split, timeout=timeout)
+            params["config"], params["split"] = resolved
+            data = self._fetch_json(
+                OLYMPIAD_DATA_SOURCES["hf_rows"],
+                params=params,
+                timeout=timeout,
+            ).get("rows", [])
         rows: List[dict] = []
         for i, item in enumerate(data):
             row = item.get("row", {})
@@ -303,6 +317,30 @@ class KGBuilder:
                 }
             )
         return rows
+
+    def _resolve_hf_config_split(self, *, dataset: str, split: str, timeout: int) -> tuple[str, str]:
+        info = self._fetch_json(
+            OLYMPIAD_DATA_SOURCES["hf_splits"],
+            params={"dataset": dataset},
+            timeout=timeout,
+        )
+        splits = info.get("splits", [])
+        if not splits:
+            raise ValueError(f"dataset {dataset} has no splits metadata")
+
+        first = splits[0]
+        chosen_config = first.get("config")
+        chosen_split = first.get("split")
+        for entry in splits:
+            entry_split = entry.get("split")
+            if entry_split == split:
+                chosen_config = entry.get("config", chosen_config)
+                chosen_split = entry_split
+                break
+
+        if not chosen_config or not chosen_split:
+            raise ValueError(f"dataset {dataset} has invalid splits metadata")
+        return str(chosen_config), str(chosen_split)
 
     def _fetch_json(self, url: str, *, params: dict, timeout: int) -> dict:
         query_url = f"{url}?{urllib.parse.urlencode(params)}" if params else url
