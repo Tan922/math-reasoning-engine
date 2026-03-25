@@ -1,10 +1,10 @@
 """mae.lib: lightweight task/knowledge/relations/tools modules."""
 
 from .schemas import KnowledgeFile, RelationFile, TaskFile, ToolFile
-from .kg_builder import KGBuilder
+from .initializer import KGBuilder, generate_csv_files
 from .knowledge_graph import KnowledgeGraph
-from .task_space import TaskSpace
-from .tool_library import ToolLibrary
+from .tasks import TaskSpace
+from .tools import ToolLibrary
 
 __all__ = [
     "TaskFile",
@@ -15,4 +15,5 @@ __all__ = [
     "KnowledgeGraph",
     "TaskSpace",
     "ToolLibrary",
+    "generate_csv_files",
 ]

@@ -72,7 +72,7 @@ def test_load_from_api_proofwiki(monkeypatch):
             }
         )
 
-    monkeypatch.setattr("mae.lib.kg_builder.requests.get", fake_get)
+    monkeypatch.setattr("mae.lib.initializer.requests.get", fake_get)
 
     rows = KGBuilder()._load_from_api("proofwiki", limit=1)
     assert len(rows) == 1
@@ -119,7 +119,7 @@ def test_load_from_api_olympiad_hf_rows(monkeypatch):
         called["timeout"] = timeout
         return DummyResponse()
 
-    monkeypatch.setattr("mae.lib.kg_builder.requests.get", fake_get)
+    monkeypatch.setattr("mae.lib.initializer.requests.get", fake_get)
     rows = KGBuilder()._load_from_api(
         "olympiadbench",
         dataset="my/olympiad",
@@ -133,3 +133,14 @@ def test_load_from_api_olympiad_hf_rows(monkeypatch):
     assert called["params"]["split"] == "test"
     assert called["timeout"] == 9
     assert rows[0]["name"] == "Prove X"
+
+
+def test_generate_csv_files(tmp_path: Path):
+    from mae.lib.initializer import generate_csv_files
+
+    generate_csv_files(output_dir=tmp_path)
+
+    assert (tmp_path / "knowledges.csv").exists()
+    assert (tmp_path / "relations.csv").exists()
+    assert (tmp_path / "tasks.csv").exists()
+    assert (tmp_path / "tools.csv").exists()

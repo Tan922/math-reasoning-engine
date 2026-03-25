@@ -1,13 +1,23 @@
 from __future__ import annotations
 
+import argparse
 from pathlib import Path
 from typing import List, Sequence
 import csv
 import re
+import sys
 
 import requests
 
-from .schemas import KnowledgeFile, RelationFile, TaskFile, save_records
+if __package__ in (None, ""):
+    repo_root = Path(__file__).resolve().parents[2]
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    from mae.lib.schemas import KnowledgeFile, RelationFile, TaskFile, save_records
+    from mae.lib.tools import ToolLibrary
+else:
+    from .schemas import KnowledgeFile, RelationFile, TaskFile, save_records
+    from .tools import ToolLibrary
 
 PROOFWIKI_API = "https://proofwiki.org/w/api.php"
 OLYMPIAD_DATA_SOURCES = {
@@ -300,3 +310,62 @@ def _clean(text: str) -> str:
 
 def _slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", text.strip().lower()).strip("_")
+
+
+def generate_csv_files(output_dir: str | Path = ".") -> None:
+    """生成 knowledges/relations/tasks/tools 四个 CSV 初始化文件。"""
+    base = Path(output_dir)
+    base.mkdir(parents=True, exist_ok=True)
+
+    builder = KGBuilder()
+    proof_rows = [
+        builder.parse_proofwiki_markdown(
+            "# AM-GM Inequality\n## Statement\nFor positive reals, arithmetic mean >= geometric mean.\n## Proof\nApply convexity/Jensen. [[Convex Function]]",
+            "k1",
+        ),
+        builder.parse_proofwiki_markdown(
+            "# Convex Function\n## Statement\nA function is convex if its secants lie above the graph.",
+            "k2",
+        ),
+    ]
+    proof_rows[0]["links"] = [
+        {
+            "relation": "depends_on",
+            "target_id": "k2",
+            "target_name": "Convex Function",
+        }
+    ]
+
+    builder.build_from_proofwiki(
+        proof_rows,
+        knowledge_out=base / "knowledges.csv",
+        relation_out=base / "relations.csv",
+    )
+
+    olympiad_rows = [
+        {"id": "t1", "name": "IMO Example 1", "difficulty": 3, "bonus": 100},
+        {"id": "t2", "name": "IMO Example 2", "difficulty": 8, "bonus": 300},
+    ]
+    builder.build_tasks_from_olympiad(olympiad_rows, task_out=base / "tasks.csv")
+    ToolLibrary.with_defaults().save(base / "tools.csv")
+
+
+def _build_arg_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Initialize MAE CSV files: knowledges.csv, relations.csv, tasks.csv, tools.csv.",
+    )
+    parser.add_argument(
+        "--output-dir",
+        default=".",
+        help="Directory for generated csv files (default: current directory).",
+    )
+    return parser
+
+
+def main() -> None:
+    args = _build_arg_parser().parse_args()
+    generate_csv_files(args.output_dir)
+
+
+if __name__ == "__main__":
+    main()
