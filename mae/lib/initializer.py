@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import argparse
+import gzip
+import json
 from pathlib import Path
 from typing import List, Sequence
 import csv
 import re
 import sys
-
-import requests
-from requests import RequestException
+import urllib.parse
+import urllib.request
 
 if __package__ in (None, ""):
     repo_root = Path(__file__).resolve().parents[2]
@@ -23,6 +24,10 @@ else:
 PROOFWIKI_API = "https://proofwiki.org/w/api.php"
 OLYMPIAD_DATA_SOURCES = {
     "hf_rows": "https://datasets-server.huggingface.co/rows"
+}
+HEADERS = {
+    "User-Agent": "MathKG-Builder/1.0 (research)",
+    "Accept-Encoding": "gzip",
 }
 LOCAL_MATHKG_ROOT = Path(__file__).resolve().parents[2] / "data" / "mathkg"
 
@@ -200,15 +205,13 @@ class KGBuilder:
             "cmlimit": min(limit, 50),
             "format": "json",
         }
-        response = requests.get(PROOFWIKI_API, params=params, timeout=timeout)
-        response.raise_for_status()
-        members = response.json().get("query", {}).get("categorymembers", [])
+        members = self._fetch_json(PROOFWIKI_API, params=params, timeout=timeout).get("query", {}).get("categorymembers", [])
 
         for page in members[:limit]:
             title = page.get("title", "")
             if not title:
                 continue
-            detail = requests.get(
+            detail = self._fetch_json(
                 PROOFWIKI_API,
                 params={
                     "action": "query",
@@ -220,9 +223,8 @@ class KGBuilder:
                 },
                 timeout=timeout,
             )
-            detail.raise_for_status()
             wikitext = ""
-            pages = detail.json().get("query", {}).get("pages", {})
+            pages = detail.get("query", {}).get("pages", {})
             for entry in pages.values():
                 rev = (entry.get("revisions") or [{}])[0]
                 wikitext = rev.get("slots", {}).get("main", {}).get("*", "")
@@ -270,7 +272,7 @@ class KGBuilder:
         limit: int,
         timeout: int,
     ) -> List[dict]:
-        response = requests.get(
+        data = self._fetch_json(
             OLYMPIAD_DATA_SOURCES["hf_rows"],
             params={
                 "dataset": dataset,
@@ -280,9 +282,7 @@ class KGBuilder:
                 "length": limit,
             },
             timeout=timeout,
-        )
-        response.raise_for_status()
-        data = response.json().get("rows", [])
+        ).get("rows", [])
         rows: List[dict] = []
         for i, item in enumerate(data):
             row = item.get("row", {})
@@ -303,6 +303,18 @@ class KGBuilder:
                 }
             )
         return rows
+
+    def _fetch_json(self, url: str, *, params: dict, timeout: int) -> dict:
+        query_url = f"{url}?{urllib.parse.urlencode(params)}" if params else url
+        req = urllib.request.Request(query_url, headers={"User-Agent": HEADERS["User-Agent"]})
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            raw = resp.read()
+            if "gzip" in str(resp.headers.get("Content-Encoding", "")).lower():
+                try:
+                    raw = gzip.decompress(raw)
+                except OSError:
+                    pass
+        return json.loads(raw.decode("utf-8"))
 
     def _load_local_mathkg_knowledge_rows(self, *, limit: int) -> List[dict]:
         entities_path = LOCAL_MATHKG_ROOT / "entities.tsv"
@@ -401,35 +413,27 @@ def generate_csv_files(
     base.mkdir(parents=True, exist_ok=True)
 
     builder = KGBuilder()
-    try:
-        proof_rows = builder._load_from_api(
-            "proofwiki",
-            limit=proofwiki_limit,
-            category=proofwiki_category,
-            timeout=timeout,
-        )
-        knowledge_source = "ProofWiki API"
-    except (RequestException, ValueError):
-        proof_rows = builder._load_local_mathkg_knowledge_rows(limit=proofwiki_limit)
-        knowledge_source = f"local MathKG snapshot ({LOCAL_MATHKG_ROOT})"
+    proof_rows = builder._load_from_api(
+        "proofwiki",
+        limit=proofwiki_limit,
+        category=proofwiki_category,
+        timeout=timeout,
+    )
+    knowledge_source = "ProofWiki API"
     knowledge_rows, relation_rows = builder.build_from_proofwiki(
         proof_rows,
         knowledge_out=base / "knowledges.csv",
         relation_out=base / "relations.csv",
     )
-    try:
-        olympiad_rows = builder._load_from_api(
-            "olympiadbench",
-            limit=olympiad_limit,
-            dataset=olympiad_dataset,
-            config=olympiad_config,
-            split=olympiad_split,
-            timeout=timeout,
-        )
-        task_source = f"HuggingFace rows API ({olympiad_dataset}/{olympiad_split})"
-    except (RequestException, ValueError):
-        olympiad_rows = builder._load_local_mathkg_task_rows(limit=olympiad_limit)
-        task_source = f"local MathKG snapshot ({LOCAL_MATHKG_ROOT})"
+    olympiad_rows = builder._load_from_api(
+        "olympiadbench",
+        limit=olympiad_limit,
+        dataset=olympiad_dataset,
+        config=olympiad_config,
+        split=olympiad_split,
+        timeout=timeout,
+    )
+    task_source = f"HuggingFace rows API ({olympiad_dataset}/{olympiad_split})"
     task_rows = builder.build_tasks_from_olympiad(olympiad_rows, task_out=base / "tasks.csv")
     ToolLibrary.with_defaults().save(base / "tools.csv")
 
