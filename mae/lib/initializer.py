@@ -5,11 +5,19 @@ from pathlib import Path
 from typing import List, Sequence
 import csv
 import re
+import sys
 
 import requests
 
-from .schemas import KnowledgeFile, RelationFile, TaskFile, save_records
-from .tools import ToolLibrary
+if __package__ in (None, ""):
+    repo_root = Path(__file__).resolve().parents[2]
+    if str(repo_root) not in sys.path:
+        sys.path.insert(0, str(repo_root))
+    from mae.lib.schemas import KnowledgeFile, RelationFile, TaskFile, save_records
+    from mae.lib.tools import ToolLibrary
+else:
+    from .schemas import KnowledgeFile, RelationFile, TaskFile, save_records
+    from .tools import ToolLibrary
 
 PROOFWIKI_API = "https://proofwiki.org/w/api.php"
 OLYMPIAD_DATA_SOURCES = {
