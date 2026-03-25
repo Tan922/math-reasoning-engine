@@ -45,20 +45,10 @@ def test_task_space(tmp_path: Path):
 
 
 def test_load_from_api_proofwiki(monkeypatch):
-    class DummyResponse:
-        def __init__(self, payload):
-            self._payload = payload
-
-        def raise_for_status(self):
-            return None
-
-        def json(self):
-            return self._payload
-
-    def fake_get(_url, params=None, timeout=0):
+    def fake_fetch_json(self, _url, *, params=None, timeout=0):
         if params and params.get("list") == "categorymembers":
-            return DummyResponse({"query": {"categorymembers": [{"title": "AM-GM Inequality"}]}})
-        return DummyResponse(
+            return {"query": {"categorymembers": [{"title": "AM-GM Inequality"}]}}
+        return (
             {
                 "query": {
                     "pages": {
@@ -72,7 +62,7 @@ def test_load_from_api_proofwiki(monkeypatch):
             }
         )
 
-    monkeypatch.setattr("mae.lib.initializer.requests.get", fake_get)
+    monkeypatch.setattr(KGBuilder, "_fetch_json", fake_fetch_json)
 
     rows = KGBuilder()._load_from_api("proofwiki", limit=1)
     assert len(rows) == 1
@@ -103,23 +93,16 @@ def test_save_wrapper(tmp_path: Path):
 def test_load_from_api_olympiad_hf_rows(monkeypatch):
     called = {}
 
-    class DummyResponse:
-        def raise_for_status(self):
-            return None
-
-        def json(self):
-            return {
-                "rows": [
-                    {"row": {"uid": "u1", "problem": "Prove X", "difficulty": 7}},
-                ]
-            }
-
-    def fake_get(_url, params=None, timeout=0):
+    def fake_fetch_json(self, _url, *, params=None, timeout=0):
         called["params"] = params or {}
         called["timeout"] = timeout
-        return DummyResponse()
+        return {
+            "rows": [
+                {"row": {"uid": "u1", "problem": "Prove X", "difficulty": 7}},
+            ]
+        }
 
-    monkeypatch.setattr("mae.lib.initializer.requests.get", fake_get)
+    monkeypatch.setattr(KGBuilder, "_fetch_json", fake_fetch_json)
     rows = KGBuilder()._load_from_api(
         "olympiadbench",
         dataset="my/olympiad",
@@ -135,8 +118,42 @@ def test_load_from_api_olympiad_hf_rows(monkeypatch):
     assert rows[0]["name"] == "Prove X"
 
 
-def test_generate_csv_files(tmp_path: Path):
+def test_generate_csv_files(tmp_path: Path, monkeypatch):
     from mae.lib.initializer import generate_csv_files
+    from mae.lib.initializer import KGBuilder
+
+    def fake_load_from_api(self, source: str, **kwargs):
+        if source == "proofwiki":
+            return [
+                {
+                    "id": "1",
+                    "name": "Theorem: Sample",
+                    "type": "theorem",
+                    "description": "Sample theorem description",
+                    "url": "https://proofwiki.org/wiki/Theorem:Sample",
+                    "links": [{"target_id": "2", "target_name": "Definition: SampleDef", "relation": "depends_on"}],
+                },
+                {
+                    "id": "2",
+                    "name": "Definition: SampleDef",
+                    "type": "definition",
+                    "description": "Sample definition description",
+                    "url": "https://proofwiki.org/wiki/Definition:SampleDef",
+                    "links": [],
+                }
+            ]
+        if source == "olympiadbench":
+            return [
+                {
+                    "id": "t1",
+                    "name": "Sample Olympiad Problem",
+                    "description": "Prove a simple identity.",
+                    "difficulty": 5.0,
+                }
+            ]
+        raise AssertionError(f"unexpected source: {source}")
+
+    monkeypatch.setattr(KGBuilder, "_load_from_api", fake_load_from_api)
 
     generate_csv_files(output_dir=tmp_path)
 
