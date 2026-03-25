@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from mae.lib import KGBuilder, KnowledgeGraph, TaskSpace, ToolLibrary
+from mae.lib.schemas import KnowledgeFile
 
 
 def test_tool_library_defaults_are_10():
@@ -41,3 +42,94 @@ def test_task_space(tmp_path: Path):
     hard = space.by_difficulty(8, 10)
     assert len(hard) == 1
     assert hard[0].id == "t2"
+
+
+def test_load_from_api_proofwiki(monkeypatch):
+    class DummyResponse:
+        def __init__(self, payload):
+            self._payload = payload
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return self._payload
+
+    def fake_get(_url, params=None, timeout=0):
+        if params and params.get("list") == "categorymembers":
+            return DummyResponse({"query": {"categorymembers": [{"title": "AM-GM Inequality"}]}})
+        return DummyResponse(
+            {
+                "query": {
+                    "pages": {
+                        "1": {
+                            "revisions": [
+                                {"slots": {"main": {"*": "== Statement == x [[Convex Function]]\n== Proof == y"}}}
+                            ]
+                        }
+                    }
+                }
+            }
+        )
+
+    monkeypatch.setattr("mae.lib.kg_builder.requests.get", fake_get)
+
+    rows = KGBuilder()._load_from_api("proofwiki", limit=1)
+    assert len(rows) == 1
+    assert rows[0]["name"] == "AM-GM Inequality"
+    assert rows[0]["links"][0]["target_name"] == "Convex Function"
+
+
+def test_save_wrapper(tmp_path: Path):
+    builder = KGBuilder()
+    rows = [
+        KnowledgeFile(
+            id="k1",
+            name="n",
+            type="theorem",
+            author="a",
+            description="d",
+            reasoning_chain="r",
+            evaluator="e",
+            usage_fee=0.0,
+            url="u",
+        )
+    ]
+    out = tmp_path / "knowledge.csv"
+    builder.save(knowledge_rows=rows, knowledge_out=out)
+    assert out.exists()
+
+
+def test_load_from_api_olympiad_hf_rows(monkeypatch):
+    called = {}
+
+    class DummyResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {
+                "rows": [
+                    {"row": {"uid": "u1", "problem": "Prove X", "difficulty": 7}},
+                ]
+            }
+
+    def fake_get(_url, params=None, timeout=0):
+        called["params"] = params or {}
+        called["timeout"] = timeout
+        return DummyResponse()
+
+    monkeypatch.setattr("mae.lib.kg_builder.requests.get", fake_get)
+    rows = KGBuilder()._load_from_api(
+        "olympiadbench",
+        dataset="my/olympiad",
+        config="zh",
+        split="test",
+        limit=1,
+        timeout=9,
+    )
+    assert called["params"]["dataset"] == "my/olympiad"
+    assert called["params"]["config"] == "zh"
+    assert called["params"]["split"] == "test"
+    assert called["timeout"] == 9
+    assert rows[0]["name"] == "Prove X"
