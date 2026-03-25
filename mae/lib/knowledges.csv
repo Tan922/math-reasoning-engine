@@ -1,0 +1,3 @@
+id,name,type,author,description,reasoning_chain,evaluator,usage_fee,url
+k1,AM-GM Inequality,theorem,ProofWiki,"For positive reals, arithmetic mean >= geometric mean.",Apply convexity/Jensen. [[Convex Function]],MAE-Auto-Eval,0.0,https://proofwiki.org/wiki/am_gm_inequality
+k2,Convex Function,theorem,ProofWiki,A function is convex if its secants lie above the graph.,,MAE-Auto-Eval,0.0,https://proofwiki.org/wiki/convex_function

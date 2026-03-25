@@ -1,0 +1,3 @@
+id,name,type,author,description,knowledge_amount,bonus
+t1,IMO Example 1,olympiad_problem,OlympiadDataset,,3.0,100.0
+t2,IMO Example 2,olympiad_problem,OlympiadDataset,,8.0,300.0

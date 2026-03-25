@@ -1,0 +1,11 @@
+id,name,type,author,description,usage_fee
+tool_001,SymPy,symbolic,MAE,符号化简与求解,0.02
+tool_002,NumPy,numeric,MAE,数值计算和线性代数,0.01
+tool_003,SciPy,optimization,MAE,优化与科学计算,0.03
+tool_004,NetworkX,graph,MAE,图结构与路径分析,0.02
+tool_005,Pandas,data,MAE,表格数据清洗处理,0.01
+tool_006,Matplotlib,visualization,MAE,结果可视化,0.01
+tool_007,Z3,solver,MAE,约束求解与验证,0.05
+tool_008,PyTorch,ml,MAE,神经模型训练,0.04
+tool_009,WolframAPI,knowledge,MAE,外部知识检索,0.08
+tool_010,LeanChecker,proof,MAE,形式化证明检查,0.06
