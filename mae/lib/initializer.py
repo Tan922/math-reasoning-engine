@@ -8,6 +8,7 @@ import re
 import sys
 
 import requests
+from requests import RequestException
 
 if __package__ in (None, ""):
     repo_root = Path(__file__).resolve().parents[2]
@@ -23,6 +24,7 @@ PROOFWIKI_API = "https://proofwiki.org/w/api.php"
 OLYMPIAD_DATA_SOURCES = {
     "hf_rows": "https://datasets-server.huggingface.co/rows"
 }
+LOCAL_MATHKG_ROOT = Path(__file__).resolve().parents[2] / "data" / "mathkg"
 
 
 class KGBuilder:
@@ -302,6 +304,77 @@ class KGBuilder:
             )
         return rows
 
+    def _load_local_mathkg_knowledge_rows(self, *, limit: int) -> List[dict]:
+        entities_path = LOCAL_MATHKG_ROOT / "entities.tsv"
+        relations_path = LOCAL_MATHKG_ROOT / "relations.tsv"
+        if not entities_path.exists() or not relations_path.exists():
+            raise FileNotFoundError("local mathkg snapshot not found")
+
+        relations_by_head: dict[str, list[dict]] = {}
+        with relations_path.open("r", encoding="utf-8", newline="") as rf:
+            rel_reader = csv.DictReader(rf, delimiter="\t")
+            for rel in rel_reader:
+                hid = str(rel.get("head_id", "")).strip()
+                tid = str(rel.get("tail_id", "")).strip()
+                tname = str(rel.get("tail_name", "")).strip()
+                if not (hid and tid and tname):
+                    continue
+                relations_by_head.setdefault(hid, []).append(
+                    {"relation": rel.get("relation", "related_to"), "target_id": tid, "target_name": tname}
+                )
+
+        rows: List[dict] = []
+        with entities_path.open("r", encoding="utf-8", newline="") as ef:
+            ent_reader = csv.DictReader(ef, delimiter="\t")
+            for ent in ent_reader:
+                eid = str(ent.get("id", ent.get("entity_id", ""))).strip()
+                name = str(ent.get("name", "")).strip()
+                if not (eid and name):
+                    continue
+                rows.append(
+                    {
+                        "id": eid,
+                        "name": name,
+                        "type": ent.get("type", "theorem"),
+                        "description": _clean(str(ent.get("description", ""))),
+                        "reasoning_chain": "",
+                        "url": ent.get("url", ent.get("proofwiki_url", "")),
+                        "links": relations_by_head.get(eid, []),
+                    }
+                )
+                if len(rows) >= limit:
+                    break
+        return rows
+
+    def _load_local_mathkg_task_rows(self, *, limit: int) -> List[dict]:
+        entities_path = LOCAL_MATHKG_ROOT / "entities.tsv"
+        if not entities_path.exists():
+            raise FileNotFoundError("local mathkg snapshot not found")
+
+        rows: List[dict] = []
+        with entities_path.open("r", encoding="utf-8", newline="") as ef:
+            ent_reader = csv.DictReader(ef, delimiter="\t")
+            for ent in ent_reader:
+                ent_type = str(ent.get("type", "")).strip().lower()
+                if ent_type not in {"theorem", "lemma", "proposition", "problem"}:
+                    continue
+                description = _clean(str(ent.get("description", "")))
+                difficulty = max(1.0, min(10.0, len(description) / 140.0))
+                rows.append(
+                    {
+                        "id": str(ent.get("id", ent.get("entity_id", ""))).strip(),
+                        "name": str(ent.get("name", "")).strip(),
+                        "type": "math_problem",
+                        "author": "MathKG",
+                        "description": description,
+                        "difficulty": round(difficulty, 2),
+                        "bonus": float(round(100 + difficulty * 20, 2)),
+                    }
+                )
+                if len(rows) >= limit:
+                    break
+        return rows
+
 
 
 def _clean(text: str) -> str:
@@ -312,42 +385,59 @@ def _slug(text: str) -> str:
     return re.sub(r"[^a-z0-9]+", "_", text.strip().lower()).strip("_")
 
 
-def generate_csv_files(output_dir: str | Path = ".") -> None:
+def generate_csv_files(
+    output_dir: str | Path = ".",
+    *,
+    proofwiki_limit: int = 50,
+    olympiad_limit: int = 50,
+    proofwiki_category: str = "Proven Results",
+    olympiad_dataset: str = "Hothan/OlympiadBench",
+    olympiad_config: str = "default",
+    olympiad_split: str = "train",
+    timeout: int = 20,
+) -> None:
     """生成 knowledges/relations/tasks/tools 四个 CSV 初始化文件。"""
     base = Path(output_dir)
     base.mkdir(parents=True, exist_ok=True)
 
     builder = KGBuilder()
-    proof_rows = [
-        builder.parse_proofwiki_markdown(
-            "# AM-GM Inequality\n## Statement\nFor positive reals, arithmetic mean >= geometric mean.\n## Proof\nApply convexity/Jensen. [[Convex Function]]",
-            "k1",
-        ),
-        builder.parse_proofwiki_markdown(
-            "# Convex Function\n## Statement\nA function is convex if its secants lie above the graph.",
-            "k2",
-        ),
-    ]
-    proof_rows[0]["links"] = [
-        {
-            "relation": "depends_on",
-            "target_id": "k2",
-            "target_name": "Convex Function",
-        }
-    ]
-
-    builder.build_from_proofwiki(
+    try:
+        proof_rows = builder._load_from_api(
+            "proofwiki",
+            limit=proofwiki_limit,
+            category=proofwiki_category,
+            timeout=timeout,
+        )
+        knowledge_source = "ProofWiki API"
+    except (RequestException, ValueError):
+        proof_rows = builder._load_local_mathkg_knowledge_rows(limit=proofwiki_limit)
+        knowledge_source = f"local MathKG snapshot ({LOCAL_MATHKG_ROOT})"
+    knowledge_rows, relation_rows = builder.build_from_proofwiki(
         proof_rows,
         knowledge_out=base / "knowledges.csv",
         relation_out=base / "relations.csv",
     )
-
-    olympiad_rows = [
-        {"id": "t1", "name": "IMO Example 1", "difficulty": 3, "bonus": 100},
-        {"id": "t2", "name": "IMO Example 2", "difficulty": 8, "bonus": 300},
-    ]
-    builder.build_tasks_from_olympiad(olympiad_rows, task_out=base / "tasks.csv")
+    try:
+        olympiad_rows = builder._load_from_api(
+            "olympiadbench",
+            limit=olympiad_limit,
+            dataset=olympiad_dataset,
+            config=olympiad_config,
+            split=olympiad_split,
+            timeout=timeout,
+        )
+        task_source = f"HuggingFace rows API ({olympiad_dataset}/{olympiad_split})"
+    except (RequestException, ValueError):
+        olympiad_rows = builder._load_local_mathkg_task_rows(limit=olympiad_limit)
+        task_source = f"local MathKG snapshot ({LOCAL_MATHKG_ROOT})"
+    task_rows = builder.build_tasks_from_olympiad(olympiad_rows, task_out=base / "tasks.csv")
     ToolLibrary.with_defaults().save(base / "tools.csv")
+
+    print(
+        f"Initialized CSV files in {base}. "
+        f"knowledges={len(knowledge_rows)} ({knowledge_source}), "
+        f"relations={len(relation_rows)}, tasks={len(task_rows)} ({task_source})"
+    )
 
 
 def _build_arg_parser() -> argparse.ArgumentParser:
@@ -359,12 +449,28 @@ def _build_arg_parser() -> argparse.ArgumentParser:
         default=".",
         help="Directory for generated csv files (default: current directory).",
     )
+    parser.add_argument("--proofwiki-limit", type=int, default=50, help="Number of ProofWiki entries to fetch.")
+    parser.add_argument("--olympiad-limit", type=int, default=50, help="Number of olympiad tasks to fetch.")
+    parser.add_argument("--proofwiki-category", default="Proven Results", help="ProofWiki category name.")
+    parser.add_argument("--olympiad-dataset", default="Hothan/OlympiadBench", help="HuggingFace dataset name.")
+    parser.add_argument("--olympiad-config", default="default", help="HuggingFace dataset config.")
+    parser.add_argument("--olympiad-split", default="train", help="HuggingFace dataset split.")
+    parser.add_argument("--timeout", type=int, default=20, help="Network timeout in seconds.")
     return parser
 
 
 def main() -> None:
     args = _build_arg_parser().parse_args()
-    generate_csv_files(args.output_dir)
+    generate_csv_files(
+        args.output_dir,
+        proofwiki_limit=args.proofwiki_limit,
+        olympiad_limit=args.olympiad_limit,
+        proofwiki_category=args.proofwiki_category,
+        olympiad_dataset=args.olympiad_dataset,
+        olympiad_config=args.olympiad_config,
+        olympiad_split=args.olympiad_split,
+        timeout=args.timeout,
+    )
 
 
 if __name__ == "__main__":
