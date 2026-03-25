@@ -1,12 +1,18 @@
 from __future__ import annotations
 
-from dataclasses import asdict
 from pathlib import Path
-from typing import Iterable, List, Sequence
+from typing import List, Sequence
 import csv
 import re
 
+import requests
+
 from .schemas import KnowledgeFile, RelationFile, TaskFile, save_records
+
+PROOFWIKI_API = "https://proofwiki.org/w/api.php"
+OLYMPIAD_DATA_SOURCES = {
+    "hf_rows": "https://datasets-server.huggingface.co/rows"
+}
 
 
 class KGBuilder:
@@ -121,6 +127,170 @@ class KGBuilder:
         source = Path(path)
         with source.open("r", encoding="utf-8", newline="") as f:
             return list(csv.DictReader(f))
+
+    def _load_from_api(
+        self,
+        source: str,
+        *,
+        limit: int = 50,
+        timeout: int = 20,
+        **kwargs: object,
+    ) -> List[dict]:
+        """从 API 加载 ProofWiki 或奥林匹克题目数据。"""
+        normalized = source.strip().lower()
+        if normalized == "proofwiki":
+            category = str(kwargs.get("category", "Proven Results"))
+            return self._load_proofwiki_rows(limit=limit, category=category, timeout=timeout)
+        if normalized in {"olympiadbench", "olympiad", "hf_rows"}:
+            dataset = str(kwargs.get("dataset", "Hothan/OlympiadBench"))
+            config = str(kwargs.get("config", "default"))
+            split = str(kwargs.get("split", "train"))
+            return self._load_hf_rows(dataset=dataset, config=config, split=split, limit=limit, timeout=timeout)
+        raise ValueError(f"不支持的数据源: {source}")
+
+    def save(
+        self,
+        *,
+        knowledge_rows: Sequence[KnowledgeFile] | None = None,
+        relation_rows: Sequence[RelationFile] | None = None,
+        task_rows: Sequence[TaskFile] | None = None,
+        knowledge_out: str | Path | None = None,
+        relation_out: str | Path | None = None,
+        task_out: str | Path | None = None,
+    ) -> None:
+        """统一保存构建结果；至少保存一类记录。"""
+        written = 0
+        if knowledge_rows is not None:
+            if knowledge_out is None:
+                raise ValueError("knowledge_rows 已提供时必须给 knowledge_out")
+            save_records(knowledge_rows, knowledge_out)
+            written += 1
+        if relation_rows is not None:
+            if relation_out is None:
+                raise ValueError("relation_rows 已提供时必须给 relation_out")
+            save_records(relation_rows, relation_out)
+            written += 1
+        if task_rows is not None:
+            if task_out is None:
+                raise ValueError("task_rows 已提供时必须给 task_out")
+            save_records(task_rows, task_out)
+            written += 1
+        if written == 0:
+            raise ValueError("至少需要提供一类可保存的数据")
+
+    def _load_proofwiki_rows(self, *, limit: int, category: str, timeout: int) -> List[dict]:
+        rows: List[dict] = []
+        params = {
+            "action": "query",
+            "list": "categorymembers",
+            "cmtitle": f"Category:{category}",
+            "cmnamespace": 0,
+            "cmlimit": min(limit, 50),
+            "format": "json",
+        }
+        response = requests.get(PROOFWIKI_API, params=params, timeout=timeout)
+        response.raise_for_status()
+        members = response.json().get("query", {}).get("categorymembers", [])
+
+        for page in members[:limit]:
+            title = page.get("title", "")
+            if not title:
+                continue
+            detail = requests.get(
+                PROOFWIKI_API,
+                params={
+                    "action": "query",
+                    "titles": title,
+                    "prop": "revisions",
+                    "rvprop": "content",
+                    "rvslots": "main",
+                    "format": "json",
+                },
+                timeout=timeout,
+            )
+            detail.raise_for_status()
+            wikitext = ""
+            pages = detail.json().get("query", {}).get("pages", {})
+            for entry in pages.values():
+                rev = (entry.get("revisions") or [{}])[0]
+                wikitext = rev.get("slots", {}).get("main", {}).get("*", "")
+            rows.append(self._proofwiki_row_from_wikitext(title=title, wikitext=wikitext))
+        return rows
+
+    def _proofwiki_row_from_wikitext(self, *, title: str, wikitext: str) -> dict:
+        statement = ""
+        proof = ""
+        st = re.search(r"==\s*(?:Theorem|Statement|Definition)\s*==(.+?)(?:\n==|\Z)", wikitext, re.S)
+        if st:
+            statement = _clean(st.group(1))
+        pf = re.search(r"==\s*Proof\s*==(.+?)(?:\n==|\Z)", wikitext, re.S)
+        if pf:
+            proof = _clean(pf.group(1))
+
+        links = []
+        for m in re.finditer(r"\[\[([^\]|#\n]+)", wikitext):
+            target = m.group(1).strip()
+            if target and target != title and not target.startswith(("File:", "Category:", "Template:")):
+                links.append(
+                    {
+                        "relation": "depends_on",
+                        "target_id": _slug(target),
+                        "target_name": target,
+                    }
+                )
+
+        return {
+            "id": _slug(title),
+            "name": title,
+            "type": "theorem",
+            "description": statement,
+            "reasoning_chain": proof,
+            "url": f"https://proofwiki.org/wiki/{title.replace(' ', '_')}",
+            "links": links,
+        }
+
+    def _load_hf_rows(
+        self,
+        *,
+        dataset: str,
+        config: str,
+        split: str,
+        limit: int,
+        timeout: int,
+    ) -> List[dict]:
+        response = requests.get(
+            OLYMPIAD_DATA_SOURCES["hf_rows"],
+            params={
+                "dataset": dataset,
+                "config": config,
+                "split": split,
+                "offset": 0,
+                "length": limit,
+            },
+            timeout=timeout,
+        )
+        response.raise_for_status()
+        data = response.json().get("rows", [])
+        rows: List[dict] = []
+        for i, item in enumerate(data):
+            row = item.get("row", {})
+            prompt = (
+                row.get("question")
+                or row.get("problem")
+                or row.get("prompt")
+                or row.get("题目")
+                or ""
+            )
+            rows.append(
+                {
+                    "id": str(row.get("id", row.get("uid", i))),
+                    "name": prompt or f"Olympiad Problem {i + 1}",
+                    "type": "olympiad_problem",
+                    "description": prompt,
+                    "difficulty": row.get("level", row.get("difficulty", 1)),
+                }
+            )
+        return rows
 
 
 
