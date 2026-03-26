@@ -1,4 +1,0 @@
-head_id	head_name	relation	tail_id	tail_name	confidence	source
-10494	Definition:Polynomial of Degree Zero	corollary_of	10542	Units of Ring of Polynomial Forms over Commutative Ring	0.95	corollaries_section
-592	Definition:Unit of Ring	corollary_of	10542	Units of Ring of Polynomial Forms over Commutative Ring	0.95	corollaries_section
-10543	Definition:Indeterminate (Polynomial Theory)	corollary_of	10542	Units of Ring of Polynomial Forms over Commutative Ring	0.95	corollaries_section

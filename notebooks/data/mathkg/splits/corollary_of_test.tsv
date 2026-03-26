@@ -1,4 +1,0 @@
-head_id	head_name	relation	tail_id	tail_name	confidence	source
-3113	Definition:Independent Events	corollary_of	3127	Probability of Occurrence of At Least One Independent Event	0.95	corollaries_section
-20294	Definition:Ring of Polynomial Forms	corollary_of	10542	Units of Ring of Polynomial Forms over Commutative Ring	0.95	corollaries_section
-2449	Definition:Probability Space	corollary_of	3210	Function of Two Discrete Random Variables	0.95	corollaries_section

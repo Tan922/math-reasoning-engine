@@ -1,4 +1,5 @@
 from pathlib import Path
+from urllib.error import HTTPError
 
 from mae.lib import KGBuilder, KnowledgeGraph, TaskSpace, ToolLibrary
 from mae.lib.schemas import KnowledgeFile
@@ -116,6 +117,40 @@ def test_load_from_api_olympiad_hf_rows(monkeypatch):
     assert called["params"]["split"] == "test"
     assert called["timeout"] == 9
     assert rows[0]["name"] == "Prove X"
+
+
+def test_load_from_api_olympiad_hf_rows_fallback_on_422(monkeypatch):
+    calls = []
+
+    def fake_fetch_json(self, url, *, params=None, timeout=0):
+        calls.append((url, dict(params or {}), timeout))
+        if url.endswith("/rows") and params and params.get("config") == "default":
+            raise HTTPError(url, 422, "Unprocessable Entity", hdrs=None, fp=None)
+        if url.endswith("/splits"):
+            return {
+                "splits": [
+                    {"config": "main", "split": "train"},
+                    {"config": "main", "split": "test"},
+                ]
+            }
+        return {"rows": [{"row": {"uid": "u2", "problem": "Fallback row"}}]}
+
+    monkeypatch.setattr(KGBuilder, "_fetch_json", fake_fetch_json)
+    rows = KGBuilder()._load_from_api(
+        "olympiadbench",
+        dataset="my/olympiad",
+        config="default",
+        split="train",
+        limit=1,
+        timeout=11,
+    )
+
+    assert rows[0]["name"] == "Fallback row"
+    assert calls[0][0].endswith("/rows")
+    assert calls[0][1]["config"] == "default"
+    assert calls[1][0].endswith("/splits")
+    assert calls[2][0].endswith("/rows")
+    assert calls[2][1]["config"] == "main"
 
 
 def test_generate_csv_files(tmp_path: Path, monkeypatch):
